@@ -7,10 +7,10 @@ import (
 )
 
 type ProviderSearchResponse struct {
-	Id          string
-	Url         string
-	Title       string
-	Description string
+	Id          string `json:"id"`
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 type Provider interface {

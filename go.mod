@@ -6,6 +6,7 @@ require (
 	github.com/go-pkgz/syncs v1.3.2
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/joho/godotenv v1.5.1
+	github.com/rs/cors v1.11.0
 )
 
 require (

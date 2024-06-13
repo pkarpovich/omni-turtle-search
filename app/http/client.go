@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
@@ -30,11 +31,11 @@ func CreateClient(cfg config.HttpConfig, multiSearch services.MultiSearch) *Clie
 func (hc *Client) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", hc.healthHandler)
-	mux.HandleFunc("GET /search", hc.searchHandler)
+	mux.HandleFunc("POST /search", hc.searchHandler)
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", hc.config.Port),
-		Handler: mux,
+		Handler: cors.Default().Handler(mux),
 	}
 
 	go func() {
