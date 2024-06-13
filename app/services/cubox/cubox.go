@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
+	"github.com/pkarpovich/omni-turtle-search/app/services"
 	"io"
 	"net/http"
 )
@@ -29,7 +30,7 @@ type SearchResponseItem struct {
 	Description string `json:"description"`
 }
 
-func (c *Client) Search(query string) ([]SearchResponseItem, error) {
+func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error) {
 	httpClient := &http.Client{}
 
 	url := c.buildSearchURL(query)
@@ -55,7 +56,17 @@ func (c *Client) Search(query string) ([]SearchResponseItem, error) {
 		return nil, err
 	}
 
-	return searchResp.Items, nil
+	items := make([]services.ProviderSearchResponse, 0, len(searchResp.Items))
+	for _, item := range searchResp.Items {
+		items = append(items, services.ProviderSearchResponse{
+			Id:          item.Id,
+			Url:         item.Url,
+			Title:       item.Title,
+			Description: item.Description,
+		})
+	}
+
+	return items, nil
 }
 
 func (c *Client) buildSearchURL(query string) string {

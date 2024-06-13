@@ -10,8 +10,13 @@ type CuboxConfig struct {
 	Token string `env:"CUBOX_TOKEN"`
 }
 
+type HttpConfig struct {
+	Port int `env:"HTTP_PORT" env-default:"8080"`
+}
+
 type Config struct {
 	Cubox CuboxConfig
+	Http  HttpConfig
 }
 
 func Init() (*Config, error) {
