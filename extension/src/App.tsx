@@ -1,9 +1,11 @@
 import styles from "./App.module.css";
 import { SearchResultItem } from "./components/SearchResultItem.tsx";
+import { useQuerySearch } from "./hooks/useQuerySearch.ts";
 import { useSearch } from "./hooks/useSearch.ts";
 
 export const App = () => {
-    const { isLoading, data } = useSearch("go");
+    const query = useQuerySearch();
+    const { isLoading, data } = useSearch(query);
 
     return (
         <div className={styles.container}>

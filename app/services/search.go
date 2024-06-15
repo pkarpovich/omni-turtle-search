@@ -42,7 +42,7 @@ func (ms MultiSearch) Search(query string) ([]ProviderSearchResponse, error) {
 		close(responses)
 	}()
 
-	var allItems []ProviderSearchResponse
+	allItems := make([]ProviderSearchResponse, 0)
 	for items := range responses {
 		allItems = append(allItems, items...)
 	}
