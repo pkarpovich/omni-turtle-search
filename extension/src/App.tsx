@@ -1,4 +1,5 @@
 import styles from "./App.module.css";
+import { Header } from "./components/Header.tsx";
 import { SearchResultItem } from "./components/SearchResultItem.tsx";
 import { useQuerySearch } from "./hooks/useQuerySearch.ts";
 import { useSearch } from "./hooks/useSearch.ts";
@@ -9,9 +10,8 @@ export const App = () => {
 
     return (
         <div className={styles.container}>
-            {isLoading ? (
-                <p>Loading...</p>
-            ) : (
+            <Header itemsLength={data.length} isLoading={isLoading} />
+            <div>
                 <ul>
                     {data.map(({ description, updateTime, title, url, id }) => (
                         <SearchResultItem
@@ -23,7 +23,7 @@ export const App = () => {
                         />
                     ))}
                 </ul>
-            )}
+            </div>
         </div>
     );
 };

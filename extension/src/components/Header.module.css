@@ -1,0 +1,13 @@
+.header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-200);
+    margin-bottom: 20px;
+    color: var(--search-result-title);
+    font-size: 14px;
+}
+
+.text {
+    flex: 1;
+    text-align: center;
+}

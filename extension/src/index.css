@@ -12,6 +12,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    --primary-200: #cfcfd1;
     --search-result-title: #18181a;;
     --search-result-title-hover: #6c5edc;;
     --result-item-title-border: #9f9fa5;
@@ -20,6 +21,7 @@
     --search-result-url-link: #707077;
 
     @media (prefers-color-scheme: dark) {
+        --primary-200: #454549;
         --search-result-title: #fff;
         --search-result-title-hover: #c0b8ff;
         --result-item-title-border: #acacaf;

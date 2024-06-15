@@ -1,0 +1,21 @@
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.cuboxDot {
+    border: 1px solid #5f6dfc;
+    background-color: #5f6dfc;
+}
+
+.logseqDot {
+    border: 1px solid #85c8c8;
+    background-color: #85c8c8;
+}
+
+.unfilled {
+    background-color: transparent !important;
+}

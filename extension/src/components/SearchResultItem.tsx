@@ -1,6 +1,7 @@
 import clsx from "clsx";
 
 import { formatDate } from "../utils/formatDate.ts";
+import { Dot, DotType } from "./Dot.tsx";
 import styles from "./SearchResultItem.module.css";
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 export const SearchResultItem = ({ description, title, date, url }: Props) => (
     <div className={styles.resultItem}>
         <div className={styles.titleContainer}>
-            <span className={styles.titleDot} />
+            <Dot type={DotType.Cubox} />
             <a
                 className={clsx(styles.title, styles.oneLineText)}
                 rel="noreferrer"

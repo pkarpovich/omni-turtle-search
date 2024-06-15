@@ -7,15 +7,6 @@
     align-items: center;
 }
 
-.titleDot {
-    width: 8px;
-    height: 8px;
-    background-color: #5f6dfc;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
-}
-
 .title {
     font-size: 18px;
     color: var(--search-result-title);
