@@ -1,7 +1,27 @@
 import styles from "./App.module.css";
+import { SearchResultItem } from "./components/SearchResultItem.tsx";
+import { useSearch } from "./hooks/useSearch.ts";
 
-function App() {
-    return <div className={styles.container}>Hello from React!</div>;
-}
+export const App = () => {
+    const { isLoading, data } = useSearch("go");
 
-export default App;
+    return (
+        <div className={styles.container}>
+            {isLoading ? (
+                <p>Loading...</p>
+            ) : (
+                <ul>
+                    {data.map(({ description, updateTime, title, url, id }) => (
+                        <SearchResultItem
+                            description={description}
+                            date={updateTime}
+                            title={title}
+                            url={url}
+                            key={id}
+                        />
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+};

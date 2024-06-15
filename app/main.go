@@ -21,11 +21,4 @@ func main() {
 	}
 
 	http.CreateClient(cfg.Http, multiSearch).Start()
-
-	resp, err := cuboxClient.Search("golang")
-	if err != nil {
-		log.Printf("[ERROR] Something went wrong: %v", err)
-	}
-
-	log.Printf("[INFO] Response: %v", resp)
 }

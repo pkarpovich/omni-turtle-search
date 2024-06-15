@@ -1,6 +1,8 @@
+// eslint-disable-next-line filename-rules/match
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+
+import { App } from "./App.tsx";
 
 const containers = document.getElementsByClassName("right-content-box");
 if (!containers.length) {
