@@ -1,8 +1,29 @@
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', afterDOMLoaded);
 } else {
     afterDOMLoaded().catch(console.error);
 }
+
+// class SearchItemComponent extends HTMLDivElement {
+//     constructor() {
+//         super();
+//     }
+//
+//     connectedCallback() {
+//         const shadowRoot = this.attachShadow({mode: 'open'});
+//
+//         const template = document.createElement('template');
+//         template.innerHTML = `
+//             <style>
+//             </style>
+//
+//             <p>Test</p>
+//         `
+//
+//         shadowRoot.appendChild(template.content.cloneNode(true));
+//     }
+// }
 
 async function afterDOMLoaded() {
     const containers = document.getElementsByClassName('right-content-box')
@@ -43,6 +64,8 @@ async function afterDOMLoaded() {
         title.className = 'kagi-result-title';
         title.href = item.url;
         title.innerText = item.title;
+        title.title = item.title;
+        title.target = '_blank';
         titleContainer.appendChild(title);
 
         div.appendChild(titleContainer);
@@ -64,6 +87,9 @@ async function afterDOMLoaded() {
         div.appendChild(description);
         mainContainer.appendChild(div);
     }
+
+    const myComponent = document.createElement('search-item-component');
+    mainContainer.appendChild(myComponent);
 
     addStyles();
 }
@@ -115,7 +141,7 @@ function addStyles() {
         }
         .kagi-result-description {
             font-size: 14px;
-            color: #4d5156;
+            color: #acacaf;
             margin-top: 5px;
             
             flex: 1;

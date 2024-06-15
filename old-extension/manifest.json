@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": ["https://kagi.com/search?q=*"],
-      "js": ["src/content.tsx"]
+      "js": ["scripts/content.js", "scripts/SearchItemComponent.js"]
     }
   ],
   "permissions": ["activeTab"]
