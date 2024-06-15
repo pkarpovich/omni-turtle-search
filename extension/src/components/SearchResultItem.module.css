@@ -18,30 +18,32 @@
 
 .title {
     font-size: 18px;
-    color: #fff;
-    border-bottom: 1px solid #acacaf;
+    color: var(--search-result-title);
+    border-bottom: 1px solid var(--result-item-title-border);
 
-    display: inline;
+    &:hover {
+        border-bottom: 1px solid var(--search-result-title-hover);
+        color: var(--search-result-title-hover);
+    }
+}
+
+.oneLineText {
+    display: block;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    &:hover {
-        border-bottom: 1px solid #6c5edc;
-        color: #6c5edc;
-    }
 }
 
 .url {
-    color: #acacaf;
+    color: var(--search-result-url-link);
     font-size: 14px;
 }
 
 .description {
     font-size: 14px;
-    color: #acacaf;
+    color: var(--search-result-content-text);
     margin-top: 5px;
 
     flex: 1;
@@ -49,7 +51,7 @@
 }
 
 .date {
-    color: #acacaf;
+    color: var(--search-result-content-text);
     background-color: var(--search-result-date-bg);
     border-radius: 5px;
     padding: 2px 5px;
