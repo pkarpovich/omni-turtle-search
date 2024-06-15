@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-pkgz/syncs"
 	"log"
+	"slices"
 )
 
 type ProviderSearchResponse struct {
@@ -11,6 +12,7 @@ type ProviderSearchResponse struct {
 	Url         string `json:"url"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	UpdateTime  int64  `json:"updateTime"`
 }
 
 type Provider interface {
@@ -44,6 +46,18 @@ func (ms MultiSearch) Search(query string) ([]ProviderSearchResponse, error) {
 	for items := range responses {
 		allItems = append(allItems, items...)
 	}
+
+	slices.SortFunc(allItems, func(i, j ProviderSearchResponse) int {
+		if i.UpdateTime > j.UpdateTime {
+			return -1
+		}
+
+		if i.UpdateTime < j.UpdateTime {
+			return 1
+		}
+
+		return 0
+	})
 
 	return allItems, nil
 }

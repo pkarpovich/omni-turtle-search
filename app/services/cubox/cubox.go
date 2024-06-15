@@ -7,6 +7,9 @@ import (
 	"github.com/pkarpovich/omni-turtle-search/app/services"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
+	"time"
 )
 
 type Client struct {
@@ -19,6 +22,29 @@ func NewClient(cfg config.CuboxConfig) *Client {
 	}
 }
 
+type Date struct {
+	time.Time
+}
+
+func (c *Date) UnmarshalJSON(b []byte) error {
+	str := string(b)
+	str = str[1 : len(str)-1]
+
+	// Remove the milliseconds part if it exists
+	if idx := strings.LastIndex(str, ":"); idx != -1 && len(str)-idx > 3 { // Checks if the part after last colon is longer than 3 (":883Z")
+		str = str[:idx] + "Z"
+	}
+
+	layout := "2006-01-02T15:04:05Z"
+	parsedTime, err := time.Parse(layout, str)
+	if err != nil {
+		return err
+	}
+
+	c.Time = parsedTime
+	return nil
+}
+
 type SearchResponse struct {
 	Items []SearchResponseItem `json:"data"`
 }
@@ -28,13 +54,14 @@ type SearchResponseItem struct {
 	Url         string `json:"targetURL"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	UpdateTime  Date   `json:"updateTime"`
 }
 
 func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error) {
 	httpClient := &http.Client{}
 
-	url := c.buildSearchURL(query)
-	req, err := http.NewRequest("GET", url, nil)
+	searchURL := c.buildSearchURL(query)
+	req, err := http.NewRequest("GET", searchURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +71,11 @@ func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error)
 	if err != nil {
 		return nil, err
 	}
-	defer bodyResp.Body.Close()
+	defer func() {
+		if err := bodyResp.Body.Close(); err != nil {
+			fmt.Printf("[ERROR] Error while closing response body: %v", err)
+		}
+	}()
 
 	var searchResp SearchResponse
 	body, err := io.ReadAll(bodyResp.Body)
@@ -62,7 +93,8 @@ func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error)
 			Id:          item.Id,
 			Url:         item.Url,
 			Title:       item.Title,
-			Description: item.Description,
+			UpdateTime:  item.UpdateTime.UnixMilli(),
+			Description: prepareDescription(item.Description),
 		})
 	}
 
@@ -70,5 +102,17 @@ func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error)
 }
 
 func (c *Client) buildSearchURL(query string) string {
-	return fmt.Sprintf("https://cubox.cc/c/api/card/search?page=1&pageSize=50&keyword=%s&filters=&archiving=false", query)
+	encodedQuery := url.QueryEscape(query)
+	return fmt.Sprintf("https://cubox.cc/c/api/search?page=1&pageSize=50&keyword=%s&filters=&archiving=false", encodedQuery)
+}
+
+func prepareDescription(description string) string {
+	description = strings.ReplaceAll(description, "\n", "")
+	description = strings.ReplaceAll(description, "\t", "")
+
+	if len(description) > 200 {
+		return description[:200] + "..."
+	}
+
+	return description
 }
