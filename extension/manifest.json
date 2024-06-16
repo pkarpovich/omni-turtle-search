@@ -9,5 +9,5 @@
       "js": ["src/content.tsx"]
     }
   ],
-  "permissions": ["activeTab"]
+  "permissions": ["activeTab", "storage"]
 }
