@@ -16,6 +16,7 @@ export const Header = ({ onCollapseChange, providersStatus, itemsLength, isColla
         <div>
             <Dot unfilled={!providersStatus.cubox} type={DotType.cubox} />
             <Dot unfilled={!providersStatus.logseq} type={DotType.logseq} />
+            <Dot unfilled={!providersStatus.todoist} type={DotType.todoist} />
         </div>
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
         <div className={styles.actionsContainer}>

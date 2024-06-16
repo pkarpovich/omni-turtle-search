@@ -10,13 +10,18 @@ type CuboxConfig struct {
 	Token string `env:"CUBOX_TOKEN"`
 }
 
+type TodoistConfig struct {
+	Token string `env:"TODOIST_TOKEN"`
+}
+
 type HttpConfig struct {
 	Port int `env:"HTTP_PORT" env-default:"8080"`
 }
 
 type Config struct {
-	Cubox CuboxConfig
-	Http  HttpConfig
+	Todoist TodoistConfig
+	Cubox   CuboxConfig
+	Http    HttpConfig
 }
 
 func Init() (*Config, error) {

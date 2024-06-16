@@ -29,8 +29,9 @@ export const App = () => {
             />
             {!isCollapsed ? (
                 <ul>
-                    {data.map(({ description, updateTime, title, url, id }) => (
+                    {data.map(({ providerName, description, updateTime, title, url, id }) => (
                         <SearchResultItem
+                            providerName={providerName}
                             description={description}
                             date={updateTime}
                             title={title}

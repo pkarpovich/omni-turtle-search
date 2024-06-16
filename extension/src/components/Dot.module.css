@@ -16,6 +16,11 @@
     background-color: #85c8c8;
 }
 
+.todoistDot {
+    border: 1px solid #e54332;
+    background-color: #e54332;
+}
+
 .unfilled {
     background-color: transparent !important;
 }

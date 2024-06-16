@@ -5,16 +5,17 @@ import { Dot, DotType } from "./Dot.tsx";
 import styles from "./SearchResultItem.module.css";
 
 type Props = {
+    providerName: DotType;
     description: string;
     title: string;
     url: string;
     date: Date;
 };
 
-export const SearchResultItem = ({ description, title, date, url }: Props) => (
+export const SearchResultItem = ({ providerName, description, title, date, url }: Props) => (
     <div className={styles.resultItem}>
         <div className={styles.titleContainer}>
-            <Dot type={DotType.cubox} />
+            <Dot type={providerName} />
             <a
                 className={clsx(styles.title, styles.oneLineText)}
                 rel="noreferrer"

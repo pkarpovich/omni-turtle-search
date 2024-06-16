@@ -1,4 +1,7 @@
+import { type DotType } from "../components/Dot.tsx";
+
 export type SearchItem = {
+    providerName: DotType;
     description: string;
     updateTime: Date;
     title: string;

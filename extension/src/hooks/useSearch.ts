@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { DotType } from "../components/Dot.tsx";
 import { Config } from "../config/config.ts";
 import { type SearchItem } from "../types/searchItem.ts";
 
 export type SearchResponse = {
-    providerName: string;
+    providerName: DotType;
     items: SearchItem[];
 };
 
@@ -16,11 +17,13 @@ type SearchResults = {
 };
 
 export type SearchProviderStatus = {
+    todoist: boolean;
     logseq: boolean;
     cubox: boolean;
 };
 
 const DefaultSearchProviderStatus: SearchProviderStatus = {
+    todoist: false,
     logseq: false,
     cubox: false,
 };
@@ -51,11 +54,17 @@ export const useSearch = (query: string): SearchResults => {
     const processedData = useMemo(
         () =>
             data
-                .reduce<SearchItem[]>((allItems, item) => [...allItems, ...item.items], [])
-                .map((item) => ({
-                    ...item,
-                    updateTime: new Date(item.updateTime),
-                }))
+                .reduce<SearchItem[]>(
+                    (allItems, item) => [
+                        ...allItems,
+                        ...item.items.map((i) => ({
+                            ...i,
+                            updateTime: new Date(i.updateTime),
+                            providerName: item.providerName,
+                        })),
+                    ],
+                    [],
+                )
                 .sort((a, b) => b.updateTime.getTime() - a.updateTime.getTime()),
         [data],
     );
