@@ -9,5 +9,8 @@
       "js": ["src/content.tsx"]
     }
   ],
-  "permissions": ["activeTab", "storage"]
+  "background": {
+    "service_worker": "src/background.ts"
+  },
+  "permissions": ["activeTab", "storage", "tabs"]
 }
