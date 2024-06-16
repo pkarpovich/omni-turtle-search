@@ -14,11 +14,13 @@ import (
 
 type Client struct {
 	config config.CuboxConfig
+	name   string
 }
 
 func NewClient(cfg config.CuboxConfig) *Client {
 	return &Client{
 		config: cfg,
+		name:   "cubox",
 	}
 }
 
@@ -57,7 +59,11 @@ type SearchResponseItem struct {
 	UpdateTime  Date   `json:"updateTime"`
 }
 
-func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error) {
+func (c *Client) GetName() string {
+	return c.name
+}
+
+func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) {
 	httpClient := &http.Client{}
 
 	searchURL := c.buildSearchURL(query)
@@ -87,9 +93,9 @@ func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error)
 		return nil, err
 	}
 
-	items := make([]services.ProviderSearchResponse, 0, len(searchResp.Items))
+	items := make([]services.ProviderSearchItem, 0, len(searchResp.Items))
 	for _, item := range searchResp.Items {
-		items = append(items, services.ProviderSearchResponse{
+		items = append(items, services.ProviderSearchItem{
 			Id:          item.Id,
 			Url:         item.Url,
 			Title:       item.Title,
@@ -98,7 +104,12 @@ func (c *Client) Search(query string) ([]services.ProviderSearchResponse, error)
 		})
 	}
 
-	return items, nil
+	resp := &services.ProviderSearchResponse{
+		ProviderName: c.GetName(),
+		Items:        items,
+	}
+
+	return resp, nil
 }
 
 func (c *Client) buildSearchURL(query string) string {

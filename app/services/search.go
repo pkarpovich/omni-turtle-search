@@ -4,10 +4,9 @@ import (
 	"context"
 	"github.com/go-pkgz/syncs"
 	"log"
-	"slices"
 )
 
-type ProviderSearchResponse struct {
+type ProviderSearchItem struct {
 	Id          string `json:"id"`
 	Url         string `json:"url"`
 	Title       string `json:"title"`
@@ -15,25 +14,30 @@ type ProviderSearchResponse struct {
 	UpdateTime  int64  `json:"updateTime"`
 }
 
+type ProviderSearchResponse struct {
+	Items        []ProviderSearchItem `json:"items"`
+	ProviderName string               `json:"providerName"`
+}
+
 type Provider interface {
-	Search(query string) ([]ProviderSearchResponse, error)
+	Search(query string) (*ProviderSearchResponse, error)
 }
 
 type MultiSearch []Provider
 
-func (ms MultiSearch) Search(query string) ([]ProviderSearchResponse, error) {
+func (ms MultiSearch) Search(query string) ([]*ProviderSearchResponse, error) {
 	wg := syncs.NewSizedGroup(4)
 
-	responses := make(chan []ProviderSearchResponse, len(ms))
+	responses := make(chan *ProviderSearchResponse, len(ms))
 
 	for _, provider := range ms {
 		wg.Go(func(context.Context) {
-			items, err := provider.Search(query)
+			resp, err := provider.Search(query)
 			if err != nil {
 				log.Printf("[ERROR] Search error: %v", err)
 			}
 
-			responses <- items
+			responses <- resp
 		})
 	}
 
@@ -42,22 +46,10 @@ func (ms MultiSearch) Search(query string) ([]ProviderSearchResponse, error) {
 		close(responses)
 	}()
 
-	allItems := make([]ProviderSearchResponse, 0)
-	for items := range responses {
-		allItems = append(allItems, items...)
+	providerResponses := make([]*ProviderSearchResponse, 0)
+	for resp := range responses {
+		providerResponses = append(providerResponses, resp)
 	}
 
-	slices.SortFunc(allItems, func(i, j ProviderSearchResponse) int {
-		if i.UpdateTime > j.UpdateTime {
-			return -1
-		}
-
-		if i.UpdateTime < j.UpdateTime {
-			return 1
-		}
-
-		return 0
-	})
-
-	return allItems, nil
+	return providerResponses, nil
 }

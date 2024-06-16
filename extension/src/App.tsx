@@ -6,11 +6,12 @@ import { useSearch } from "./hooks/useSearch.ts";
 
 export const App = () => {
     const query = useQuerySearch();
-    const { isLoading, data } = useSearch(query);
+    const { providersStatus, isLoading, data } = useSearch(query);
+    console.log(providersStatus);
 
     return (
         <div className={styles.container}>
-            <Header itemsLength={data.length} isLoading={isLoading} />
+            <Header providersStatus={providersStatus} itemsLength={data.length} isLoading={isLoading} />
             <div>
                 <ul>
                     {data.map(({ description, updateTime, title, url, id }) => (

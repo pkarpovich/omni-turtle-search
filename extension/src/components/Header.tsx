@@ -1,16 +1,18 @@
+import { type SearchProviderStatus } from "../hooks/useSearch.ts";
 import { Dot, DotType } from "./Dot.tsx";
 import styles from "./Header.module.css";
 
 type Props = {
+    providersStatus: SearchProviderStatus;
     itemsLength: number;
     isLoading: boolean;
 };
 
-export const Header = ({ itemsLength, isLoading }: Props) => (
+export const Header = ({ providersStatus, itemsLength, isLoading }: Props) => (
     <header className={styles.header}>
         <div>
-            <Dot type={DotType.Cubox} />
-            <Dot type={DotType.Logseq} />
+            <Dot unfilled={!providersStatus.cubox} type={DotType.Cubox} />
+            <Dot unfilled={!providersStatus.logseq} type={DotType.Logseq} />
         </div>
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
         <picture>

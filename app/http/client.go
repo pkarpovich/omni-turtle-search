@@ -64,7 +64,8 @@ type SearchRequest struct {
 }
 
 type SearchResponse struct {
-	Items []services.ProviderSearchResponse `json:"data"`
+	Items        []services.ProviderSearchItem `json:"items"`
+	ProviderName string                        `json:"providerName"`
 }
 
 func (hc *Client) searchHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,15 +78,13 @@ func (hc *Client) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := hc.multiSearch.Search(req.Query)
+	resp, err := hc.multiSearch.Search(req.Query)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	respBody := &SearchResponse{Items: items}
-
-	err = json.NewEncoder(w).Encode(respBody)
+	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
 		log.Printf("[ERROR] Failed to write response: %v", err)
 	}
