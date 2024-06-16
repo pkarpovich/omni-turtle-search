@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import styles from "./App.module.css";
 import { Header } from "./components/Header.tsx";

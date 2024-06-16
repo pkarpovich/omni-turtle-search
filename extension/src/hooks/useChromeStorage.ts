@@ -5,7 +5,6 @@ export const useChromeStorage = <T>(key: string, defaultValue: T) => {
 
     useEffect(() => {
         chrome.storage.sync.get(key, (data) => {
-            console.log(data[key]);
             setValue(data[key] ?? defaultValue);
         });
     }, [key, defaultValue]);

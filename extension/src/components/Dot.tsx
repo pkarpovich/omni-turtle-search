@@ -3,8 +3,8 @@ import clsx from "clsx";
 import styles from "./Dot.module.css";
 
 export enum DotType {
-    Logseq = "logseq",
-    Cubox = "cubox",
+    logseq = "logseq",
+    cubox = "cubox",
 }
 
 type Props = {
@@ -16,8 +16,8 @@ export const Dot = ({ unfilled, type }: Props) => (
     <span
         className={clsx(
             {
-                [styles.logseqDot]: type === DotType.Logseq,
-                [styles.cuboxDot]: type === DotType.Cubox,
+                [styles.logseqDot]: type === DotType.logseq,
+                [styles.cuboxDot]: type === DotType.cubox,
                 [styles.unfilled]: Boolean(unfilled),
             },
             styles.dot,

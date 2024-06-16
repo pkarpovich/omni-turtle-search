@@ -14,8 +14,8 @@ type Props = {
 export const Header = ({ onCollapseChange, providersStatus, itemsLength, isCollapsed, isLoading }: Props) => (
     <header className={styles.header}>
         <div>
-            <Dot unfilled={!providersStatus.cubox} type={DotType.Cubox} />
-            <Dot unfilled={!providersStatus.logseq} type={DotType.Logseq} />
+            <Dot unfilled={!providersStatus.cubox} type={DotType.cubox} />
+            <Dot unfilled={!providersStatus.logseq} type={DotType.logseq} />
         </div>
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
         <div className={styles.actionsContainer}>
