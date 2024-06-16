@@ -19,12 +19,14 @@ type SearchResults = {
 export type SearchProviderStatus = {
     todoist: boolean;
     logseq: boolean;
+    notion: boolean;
     cubox: boolean;
 };
 
 const DefaultSearchProviderStatus: SearchProviderStatus = {
     todoist: false,
     logseq: false,
+    notion: false,
     cubox: false,
 };
 

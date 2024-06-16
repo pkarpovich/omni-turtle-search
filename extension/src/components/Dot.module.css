@@ -21,6 +21,11 @@
     background-color: #e54332;
 }
 
+.notionDot {
+    border: 1px solid #dfdfdf;
+    background-color: #dfdfdf;
+}
+
 .unfilled {
     background-color: transparent !important;
 }

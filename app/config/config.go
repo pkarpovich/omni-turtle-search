@@ -14,12 +14,17 @@ type TodoistConfig struct {
 	Token string `env:"TODOIST_TOKEN"`
 }
 
+type NotionConfig struct {
+	Token string `env:"NOTION_TOKEN"`
+}
+
 type HttpConfig struct {
 	Port int `env:"HTTP_PORT" env-default:"8080"`
 }
 
 type Config struct {
 	Todoist TodoistConfig
+	Notion  NotionConfig
 	Cubox   CuboxConfig
 	Http    HttpConfig
 }

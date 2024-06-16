@@ -5,6 +5,7 @@ import styles from "./Dot.module.css";
 export enum DotType {
     todoist = "todoist",
     logseq = "logseq",
+    notion = "notion",
     cubox = "cubox",
 }
 
@@ -19,6 +20,7 @@ export const Dot = ({ unfilled, type }: Props) => (
             {
                 [styles.todoistDot]: type === DotType.todoist,
                 [styles.logseqDot]: type === DotType.logseq,
+                [styles.notionDot]: type === DotType.notion,
                 [styles.cuboxDot]: type === DotType.cubox,
                 [styles.unfilled]: Boolean(unfilled),
             },
