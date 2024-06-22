@@ -4,20 +4,54 @@ import styles from "./Header.module.css";
 import { Logo } from "./Logo.tsx";
 
 type Props = {
+    onToggleProviderVisibility: (provider: DotType) => void;
     providersStatus: SearchProviderStatus;
     onCollapseChange: () => void;
+    hiddenProviders: DotType[];
     isCollapsed: boolean;
     itemsLength: number;
     isLoading: boolean;
 };
 
-export const Header = ({ onCollapseChange, providersStatus, itemsLength, isCollapsed, isLoading }: Props) => (
+export const Header = ({
+    onToggleProviderVisibility,
+    onCollapseChange,
+    providersStatus,
+    hiddenProviders,
+    itemsLength,
+    isCollapsed,
+    isLoading,
+}: Props) => (
     <header className={styles.header}>
         <div>
-            <Dot unfilled={!providersStatus.cubox} type={DotType.cubox} />
-            <Dot unfilled={!providersStatus.logseq} type={DotType.logseq} />
-            <Dot unfilled={!providersStatus.todoist} type={DotType.todoist} />
-            <Dot unfilled={!providersStatus.notion} type={DotType.notion} />
+            <Dot
+                unfilled={hiddenProviders.includes(DotType.cubox)}
+                onClick={onToggleProviderVisibility}
+                error={!providersStatus.cubox}
+                type={DotType.cubox}
+                loading={isLoading}
+            />
+            <Dot
+                unfilled={hiddenProviders.includes(DotType.logseq)}
+                onClick={onToggleProviderVisibility}
+                error={!providersStatus.logseq}
+                type={DotType.logseq}
+                loading={isLoading}
+            />
+            <Dot
+                unfilled={hiddenProviders.includes(DotType.todoist)}
+                onClick={onToggleProviderVisibility}
+                error={!providersStatus.todoist}
+                type={DotType.todoist}
+                loading={isLoading}
+            />
+            <Dot
+                unfilled={hiddenProviders.includes(DotType.notion)}
+                onClick={onToggleProviderVisibility}
+                error={!providersStatus.notion}
+                type={DotType.notion}
+                loading={isLoading}
+            />
         </div>
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
         <div className={styles.actionsContainer}>

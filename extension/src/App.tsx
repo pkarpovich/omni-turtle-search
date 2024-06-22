@@ -11,7 +11,7 @@ const CollapseKey = "isCollapsed";
 
 export const App = () => {
     const query = useQuerySearch();
-    const { providersStatus, isLoading, data } = useSearch(query);
+    const { toggleProviderVisibility, hiddenProviders, providersStatus, isLoading, data } = useSearch(query);
     const [isCollapsed, setIsCollapsed] = useChromeStorage<boolean>(CollapseKey, false);
 
     const handleToggleCollapse = useCallback(() => {
@@ -21,8 +21,10 @@ export const App = () => {
     return (
         <div className={styles.container}>
             <Header
+                onToggleProviderVisibility={toggleProviderVisibility}
                 onCollapseChange={handleToggleCollapse}
                 providersStatus={providersStatus}
+                hiddenProviders={hiddenProviders}
                 isCollapsed={isCollapsed}
                 itemsLength={data.length}
                 isLoading={isLoading}

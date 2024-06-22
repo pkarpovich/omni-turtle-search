@@ -1,31 +1,70 @@
 .dot {
-    width: 8px;
-    height: 8px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     display: inline-block;
     margin-right: 8px;
+    position: relative;
+    vertical-align: middle;
+    color: inherit;
 }
 
 .cuboxDot {
-    border: 1px solid #5f6dfc;
+    color: #5f6dfc;
+    border: 2px solid #5f6dfc;
     background-color: #5f6dfc;
 }
 
 .logseqDot {
-    border: 1px solid #85c8c8;
+    color: #85c8c8;
+    border: 2px solid #85c8c8;
     background-color: #85c8c8;
 }
 
 .todoistDot {
-    border: 1px solid #e54332;
+    color: #e54332;
+    border: 2px solid #e54332;
     background-color: #e54332;
 }
 
 .notionDot {
-    border: 1px solid #dfdfdf;
+    color: #dfdfdf;
+    border: 2px solid #dfdfdf;
     background-color: #dfdfdf;
 }
 
 .unfilled {
-    background-color: transparent !important;
+    border-width: 2px;
+    background-color: transparent;
+}
+
+.error {
+    position: relative;
+    background-color: transparent;
+}
+
+.error::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    background-color: currentColor;
+    transform: rotate(90deg);
+    top: -2px;
+    left: 4px;
+}
+
+.loading {
+    background-color: transparent;
+    border-style: dotted;
+    border-width: 3px;
+    animation: spinner 5s linear infinite;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+.pointer {
+    cursor: pointer;
 }

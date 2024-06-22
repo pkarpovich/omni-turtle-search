@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DotType } from "../components/Dot.tsx";
 import { Config } from "../config/config.ts";
@@ -10,7 +10,9 @@ export type SearchResponse = {
 };
 
 type SearchResults = {
+    toggleProviderVisibility: (provider: DotType) => void;
     providersStatus: SearchProviderStatus;
+    hiddenProviders: DotType[];
     error: Error | null;
     isLoading: boolean;
     data: SearchItem[];
@@ -33,7 +35,8 @@ const DefaultSearchProviderStatus: SearchProviderStatus = {
 export const useSearch = (query: string): SearchResults => {
     const [data, setData] = useState<SearchResponse[]>([]);
     const [error, setError] = useState<Error | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [hiddenProviders, setHiddenProviders] = useState<DotType[]>([]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -56,6 +59,7 @@ export const useSearch = (query: string): SearchResults => {
     const processedData = useMemo(
         () =>
             data
+                .filter((item) => !hiddenProviders.includes(item.providerName))
                 .reduce<SearchItem[]>(
                     (allItems, item) => [
                         ...allItems,
@@ -68,7 +72,7 @@ export const useSearch = (query: string): SearchResults => {
                     [],
                 )
                 .sort((a, b) => b.updateTime.getTime() - a.updateTime.getTime()),
-        [data],
+        [data, hiddenProviders],
     );
 
     const providersStatus = useMemo<SearchProviderStatus>(
@@ -83,5 +87,11 @@ export const useSearch = (query: string): SearchResults => {
         [data],
     );
 
-    return { data: processedData, providersStatus, isLoading, error };
+    const toggleProviderVisibility = useCallback((provider: DotType) => {
+        setHiddenProviders((prev) =>
+            prev.includes(provider) ? prev.filter((p) => p !== provider) : [...prev, provider],
+        );
+    }, []);
+
+    return { toggleProviderVisibility, data: processedData, hiddenProviders, providersStatus, isLoading, error };
 };
