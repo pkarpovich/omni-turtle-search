@@ -15,10 +15,11 @@ type Props = {
     unfilled?: boolean;
     loading?: boolean;
     error?: boolean;
+    small?: boolean;
     type: DotType;
 };
 
-export const Dot = ({ unfilled, loading, onClick, error, type }: Props) => {
+export const Dot = ({ unfilled, loading, onClick, error, small, type }: Props) => {
     const handleClick = useCallback(() => {
         if (onClick && !loading && !error) {
             onClick(type);
@@ -37,6 +38,7 @@ export const Dot = ({ unfilled, loading, onClick, error, type }: Props) => {
                     [styles.error]: Boolean(error) && !loading,
                     [styles.cuboxDot]: type === DotType.cubox,
                     [styles.loading]: Boolean(loading),
+                    [styles.small]: Boolean(small),
                 },
                 styles.dot,
             )}

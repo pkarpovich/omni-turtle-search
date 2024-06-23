@@ -15,7 +15,7 @@ type Props = {
 export const SearchResultItem = ({ providerName, description, title, date, url }: Props) => (
     <div className={styles.resultItem}>
         <div className={styles.titleContainer}>
-            <Dot type={providerName} />
+            <Dot type={providerName} small={true} />
             <a
                 className={clsx(styles.title, styles.oneLineText)}
                 rel="noreferrer"

@@ -7,6 +7,9 @@
     position: relative;
     vertical-align: middle;
     color: inherit;
+    border: none;
+    background: none;
+    padding: 0;
 }
 
 .cuboxDot {
@@ -43,15 +46,15 @@
     background-color: transparent;
 }
 
-.error::before {
+.error::after {
     content: '';
     position: absolute;
     width: 2px;
-    height: 14px;
+    height: 20px;
     background-color: currentColor;
-    transform: rotate(90deg);
-    top: -2px;
-    left: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .loading {
@@ -62,9 +65,16 @@
 }
 
 @keyframes spinner {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .pointer {
     cursor: pointer;
+}
+
+.small {
+    width: 8px;
+    height: 8px;
 }
