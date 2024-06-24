@@ -16,7 +16,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.omni-search.rule=Host(`relay.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.omni-search.rule=Host(`omni-search.${ROOT_DOMAIN}`)"
       - "traefik.http.routers.omni-search.entrypoints=https"
       - "traefik.http.routers.omni-search.tls.certresolver=le"
 
