@@ -62,7 +62,7 @@ func (hc *Client) Start() {
 
 type SearchRequest struct {
 	Query string             `json:"query"`
-	Meta  *provider.Metadata `json:"meta"`
+	Meta  *provider.Metadata `json:"metadata"`
 }
 
 type SearchResponse struct {

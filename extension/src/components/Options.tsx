@@ -3,9 +3,9 @@ import { type ChangeEvent, useCallback } from "react";
 import { useChromeStorage } from "../hooks/useChromeStorage.ts";
 import styles from "./Options.module.css";
 
-const LogseqUrlKey = "logseqUrl";
-const LogseqTokenKey = "loggseqToken";
-const LogseqWorkspaceKey = "logseqWorkspace";
+export const LogseqUrlKey = "logseqUrl";
+export const LogseqTokenKey = "loggseqToken";
+export const LogseqWorkspaceKey = "logseqWorkspace";
 
 export const Options = () => {
     const [logseqUrl, setLogseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");

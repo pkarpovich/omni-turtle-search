@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DotType } from "../components/Dot.tsx";
+import { LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
 import { Config } from "../config/config.ts";
 import { type SearchItem } from "../types/searchItem.ts";
+import { useChromeStorage } from "./useChromeStorage.ts";
 
 export type SearchResponse = {
     providerName: DotType;
@@ -32,29 +34,76 @@ const DefaultSearchProviderStatus: SearchProviderStatus = {
     cubox: false,
 };
 
+type LogseqMetadata = {
+    workspace: string;
+    token: string;
+    url: string;
+};
+
+type Metadata = {
+    logseq: LogseqMetadata;
+};
+
 export const useSearch = (query: string): SearchResults => {
     const [data, setData] = useState<SearchResponse[]>([]);
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hiddenProviders, setHiddenProviders] = useState<DotType[]>([]);
 
+    const [logseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");
+    const [logseqToken] = useChromeStorage<string>(LogseqTokenKey, "");
+    const [logseqWorkspace] = useChromeStorage<string>(LogseqWorkspaceKey, "");
+
+    const metadata = useMemo<Metadata | null>(() => {
+        if (!logseqUrl) {
+            console.warn("Logseq URL is not set");
+        }
+
+        if (!logseqToken) {
+            console.warn("Logseq Token is not set");
+        }
+
+        if (!logseqWorkspace) {
+            console.warn("Logseq Workspace is not set");
+        }
+
+        if (!logseqUrl || !logseqToken || !logseqWorkspace) {
+            return null;
+        }
+
+        return {
+            logseq: {
+                workspace: logseqWorkspace,
+                token: logseqToken,
+                url: logseqUrl,
+            },
+        };
+    }, [logseqUrl, logseqToken, logseqWorkspace]);
+
+    console.log(metadata);
+
     useEffect(() => {
+        if (!metadata) {
+            return;
+        }
+
         setIsLoading(true);
 
         fetch(Config.SearchApiUrl, {
+            body: JSON.stringify({
+                metadata,
+                query,
+            }),
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                query,
-            }),
             method: "POST",
         })
             .then((response) => response.json())
             .then((data: SearchResponse[]) => setData(data))
             .catch(setError)
             .finally(() => setIsLoading(false));
-    }, [query]);
+    }, [query, metadata]);
 
     const processedData = useMemo(
         () =>
