@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DotType } from "../components/Dot.tsx";
-import { LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
-import { Config } from "../config/config.ts";
+import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
 import { type SearchItem } from "../types/searchItem.ts";
 import { useChromeStorage } from "./useChromeStorage.ts";
 
@@ -50,6 +49,7 @@ export const useSearch = (query: string): SearchResults => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hiddenProviders, setHiddenProviders] = useState<DotType[]>([]);
 
+    const [baseUrl] = useChromeStorage<string>(BaseUrlKey, "");
     const [logseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");
     const [logseqToken] = useChromeStorage<string>(LogseqTokenKey, "");
     const [logseqWorkspace] = useChromeStorage<string>(LogseqWorkspaceKey, "");
@@ -80,16 +80,14 @@ export const useSearch = (query: string): SearchResults => {
         };
     }, [logseqUrl, logseqToken, logseqWorkspace]);
 
-    console.log(metadata);
-
     useEffect(() => {
-        if (!metadata) {
+        if (!metadata || !baseUrl) {
             return;
         }
 
         setIsLoading(true);
 
-        fetch(Config.SearchApiUrl, {
+        fetch(`${baseUrl}/search`, {
             body: JSON.stringify({
                 metadata,
                 query,
