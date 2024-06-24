@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"github.com/rs/cors"
 	"log"
 	"net/http"
@@ -60,7 +61,8 @@ func (hc *Client) Start() {
 }
 
 type SearchRequest struct {
-	Query string `json:"query"`
+	Query string             `json:"query"`
+	Meta  *provider.Metadata `json:"meta"`
 }
 
 type SearchResponse struct {
@@ -78,7 +80,7 @@ func (hc *Client) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := hc.multiSearch.Search(req.Query)
+	resp, err := hc.multiSearch.Search(req.Query, req.Meta)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return

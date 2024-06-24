@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"log"
 	"net/http"
 	"strings"
@@ -44,7 +45,7 @@ func (c *Client) GetName() string {
 	return c.name
 }
 
-func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) {
+func (c *Client) Search(query string, _ *provider.Metadata) (*services.ProviderSearchResponse, error) {
 	searchResp, err := c.fetchAllTasks()
 	if err != nil {
 		return nil, err

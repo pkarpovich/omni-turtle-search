@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"github.com/go-pkgz/syncs"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"log"
 )
 
@@ -20,19 +21,19 @@ type ProviderSearchResponse struct {
 }
 
 type Provider interface {
-	Search(query string) (*ProviderSearchResponse, error)
+	Search(query string, metadata *provider.Metadata) (*ProviderSearchResponse, error)
 }
 
 type MultiSearch []Provider
 
-func (ms MultiSearch) Search(query string) ([]*ProviderSearchResponse, error) {
+func (ms MultiSearch) Search(query string, metadata *provider.Metadata) ([]*ProviderSearchResponse, error) {
 	wg := syncs.NewSizedGroup(4)
 
 	responses := make(chan *ProviderSearchResponse, len(ms))
 
-	for _, provider := range ms {
+	for _, p := range ms {
 		wg.Go(func(context.Context) {
-			resp, err := provider.Search(query)
+			resp, err := p.Search(query, metadata)
 			if err != nil {
 				log.Printf("[ERROR] Search error: %v", err)
 			}

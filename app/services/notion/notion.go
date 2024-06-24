@@ -5,6 +5,7 @@ import (
 	"github.com/jomei/notionapi"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"log"
 )
 
@@ -28,7 +29,7 @@ func (c *Client) GetName() string {
 	return c.name
 }
 
-func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) {
+func (c *Client) Search(query string, _ *provider.Metadata) (*services.ProviderSearchResponse, error) {
 	resp, err := c.client.Search.Do(context.Background(), &notionapi.SearchRequest{
 		Query: query,
 		Sort: &notionapi.SortObject{

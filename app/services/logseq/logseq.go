@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"io"
 	"log"
 	"net/http"
@@ -59,16 +60,26 @@ type SearchResponse struct {
 	Pages       []string      `json:"pages"`
 }
 
-func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) {
+type SearchRequest[T any] struct {
+	metadata provider.LogseqMetadata
+	method   string
+	args     []T
+}
+
+func (c *Client) Search(query string, metadata *provider.Metadata) (*services.ProviderSearchResponse, error) {
 	var searchResp SearchResponse
-	if err := executeRequest("logseq.App.search", []string{fmt.Sprintf("[%s]", query)}, &searchResp); err != nil {
+	if err := executeRequest(SearchRequest[string]{
+		args:     []string{fmt.Sprintf("[%s]", query)},
+		method:   "logseq.Search.search",
+		metadata: metadata.Logseq,
+	}, &searchResp); err != nil {
 		return nil, err
 	}
 
 	items := make([]services.ProviderSearchItem, 0, len(searchResp.Blocks))
 
 	for _, block := range searchResp.Blocks {
-		page, err := c.getPage(block.PageId)
+		page, err := c.getPage(block.PageId, metadata.Logseq)
 		if err != nil {
 			log.Printf("[ERROR] Error while getting page: %v", err)
 			continue
@@ -76,7 +87,7 @@ func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) 
 
 		items = append(items, services.ProviderSearchItem{
 			Id:          block.Id,
-			Url:         fmt.Sprintf("logseq://graph/%s?block-id=%s", c.config.Workspace, block.Id),
+			Url:         fmt.Sprintf("logseq://graph/%s?block-id=%s", metadata.Logseq.Workspace, block.Id),
 			Title:       page.Name,
 			Description: cleanString(block.Content),
 			UpdateTime:  page.CreatedAt,
@@ -89,34 +100,38 @@ func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) 
 	}, nil
 }
 
-func (c *Client) getPage(id int64) (*Page, error) {
+func (c *Client) getPage(id int64, meta provider.LogseqMetadata) (*Page, error) {
 	var page Page
 
-	if err := executeRequest("logseq.Editor.getPage", []int64{id}, &page); err != nil {
+	if err := executeRequest(SearchRequest[int64]{
+		method:   "logseq.Editor.getPage",
+		args:     []int64{id},
+		metadata: meta,
+	}, &page); err != nil {
 		return nil, err
 	}
 
 	return &page, nil
 }
 
-func executeRequest[T any, N any](method string, args []N, result T) error {
+func executeRequest[T any, N any](request SearchRequest[N], result T) error {
 	httpClient := &http.Client{}
 
 	reqBody := RequestBody[N]{
-		Method: method,
-		Args:   args,
+		Method: request.method,
+		Args:   request.args,
 	}
 	body, err := json.Marshal(reqBody)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", Url, bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", request.metadata.Url, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", "Bearer test")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", request.metadata.Token))
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -139,21 +154,6 @@ func executeRequest[T any, N any](method string, args []N, result T) error {
 	}
 
 	return nil
-}
-
-func removeSpecialChars(input string) string {
-
-	replacer := strings.NewReplacer(
-		"\n", "",
-		"\t", "",
-	)
-
-	cleaned := replacer.Replace(input)
-
-	pattern := regexp.MustCompile(`\$\S+?\$`)
-	cleaned = pattern.ReplaceAllString(cleaned, "")
-
-	return cleaned
 }
 
 func cleanString(content string) string {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
+	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"io"
 	"net/http"
 	"net/url"
@@ -63,7 +64,7 @@ func (c *Client) GetName() string {
 	return c.name
 }
 
-func (c *Client) Search(query string) (*services.ProviderSearchResponse, error) {
+func (c *Client) Search(query string, _ *provider.Metadata) (*services.ProviderSearchResponse, error) {
 	httpClient := &http.Client{}
 
 	searchURL := c.buildSearchURL(query)
