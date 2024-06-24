@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pkarpovich/omni-turtle-search/app/config"
 	"github.com/pkarpovich/omni-turtle-search/app/services"
 	"github.com/pkarpovich/omni-turtle-search/app/services/provider"
 	"io"
@@ -17,14 +16,12 @@ import (
 const Url = "http://127.0.0.1:12315/api"
 
 type Client struct {
-	config config.LogseqConfig
-	name   string
+	name string
 }
 
-func NewClient(cfg config.LogseqConfig) *Client {
+func NewClient() *Client {
 	return &Client{
-		config: cfg,
-		name:   "logseq",
+		name: "logseq",
 	}
 }
 

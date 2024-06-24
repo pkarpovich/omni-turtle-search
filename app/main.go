@@ -20,7 +20,7 @@ func main() {
 	cuboxClient := cubox.NewClient(cfg.Cubox)
 	todoistClient := todoist.NewClient(cfg.Todoist)
 	notionClient := notion.NewClient(cfg.Notion)
-	logseqClient := logseq.NewClient(cfg.Logseq)
+	logseqClient := logseq.NewClient()
 
 	multiSearch := services.MultiSearch{
 		cuboxClient,

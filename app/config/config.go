@@ -6,11 +6,6 @@ import (
 	"log"
 )
 
-type LogseqConfig struct {
-	Token     string `env:"LOGSEQ_TOKEN"`
-	Workspace string `env:"LOGSEQ_WORKSPACE"`
-}
-
 type CuboxConfig struct {
 	Token string `env:"CUBOX_TOKEN"`
 }
@@ -29,7 +24,6 @@ type HttpConfig struct {
 
 type Config struct {
 	Todoist TodoistConfig
-	Logseq  LogseqConfig
 	Notion  NotionConfig
 	Cubox   CuboxConfig
 	Http    HttpConfig
