@@ -27,28 +27,28 @@ export const Header = ({
             <Dot
                 unfilled={hiddenProviders.includes(DotType.cubox)}
                 onClick={onToggleProviderVisibility}
-                error={!providersStatus.cubox}
+                error={providersStatus.cubox.error}
                 type={DotType.cubox}
                 loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.logseq)}
+                error={providersStatus.logseq.error}
                 onClick={onToggleProviderVisibility}
-                error={!providersStatus.logseq}
                 type={DotType.logseq}
                 loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.todoist)}
+                error={providersStatus.todoist.error}
                 onClick={onToggleProviderVisibility}
-                error={!providersStatus.todoist}
                 type={DotType.todoist}
                 loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.notion)}
+                error={providersStatus.notion.error}
                 onClick={onToggleProviderVisibility}
-                error={!providersStatus.notion}
                 type={DotType.notion}
                 loading={isLoading}
             />

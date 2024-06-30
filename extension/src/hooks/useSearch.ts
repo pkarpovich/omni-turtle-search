@@ -7,6 +7,7 @@ import { useChromeStorage } from "./useChromeStorage.ts";
 
 export type SearchResponse = {
     providerName: DotType;
+    error: string | null;
     items: SearchItem[];
 };
 
@@ -19,18 +20,36 @@ type SearchResults = {
     data: SearchItem[];
 };
 
+export type ProviderStatus = {
+    status: boolean;
+    error?: string;
+    name: DotType;
+};
+
 export type SearchProviderStatus = {
-    todoist: boolean;
-    logseq: boolean;
-    notion: boolean;
-    cubox: boolean;
+    todoist: ProviderStatus;
+    logseq: ProviderStatus;
+    notion: ProviderStatus;
+    cubox: ProviderStatus;
 };
 
 const DefaultSearchProviderStatus: SearchProviderStatus = {
-    todoist: false,
-    logseq: false,
-    notion: false,
-    cubox: false,
+    todoist: {
+        name: DotType.todoist,
+        status: false,
+    },
+    logseq: {
+        name: DotType.logseq,
+        status: false,
+    },
+    notion: {
+        name: DotType.notion,
+        status: false,
+    },
+    cubox: {
+        name: DotType.cubox,
+        status: false,
+    },
 };
 
 type LogseqMetadata = {
@@ -125,9 +144,13 @@ export const useSearch = (query: string): SearchResults => {
     const providersStatus = useMemo<SearchProviderStatus>(
         () =>
             data.reduce<SearchProviderStatus>(
-                (status, { providerName }) => ({
+                (status, { providerName, error }) => ({
                     ...status,
-                    [providerName]: true,
+                    [providerName]: {
+                        name: providerName,
+                        status: !error,
+                        error,
+                    },
                 }),
                 DefaultSearchProviderStatus,
             ),

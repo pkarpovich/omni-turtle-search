@@ -18,10 +18,12 @@ type ProviderSearchItem struct {
 type ProviderSearchResponse struct {
 	Items        []ProviderSearchItem `json:"items"`
 	ProviderName string               `json:"providerName"`
+	Error        string               `json:"error,omitempty"`
 }
 
 type Provider interface {
 	Search(query string, metadata *provider.Metadata) (*ProviderSearchResponse, error)
+	GetName() string
 }
 
 type MultiSearch []Provider
@@ -36,6 +38,12 @@ func (ms MultiSearch) Search(query string, metadata *provider.Metadata) ([]*Prov
 			resp, err := p.Search(query, metadata)
 			if err != nil {
 				log.Printf("[ERROR] Search error: %v", err)
+
+				resp = &ProviderSearchResponse{
+					Items:        make([]ProviderSearchItem, 0),
+					ProviderName: p.GetName(),
+					Error:        err.Error(),
+				}
 			}
 
 			responses <- resp

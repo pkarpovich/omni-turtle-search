@@ -14,8 +14,8 @@ type Props = {
     onClick?: (provider: DotType) => void;
     unfilled?: boolean;
     loading?: boolean;
-    error?: boolean;
     small?: boolean;
+    error?: string;
     type: DotType;
 };
 
@@ -43,6 +43,7 @@ export const Dot = ({ unfilled, loading, onClick, error, small, type }: Props) =
                 styles.dot,
             )}
             onClick={handleClick}
+            title={error}
             type="button"
         />
     );
