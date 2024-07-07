@@ -1,14 +1,17 @@
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, _) => {
-        // changeInfo object: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onUpdated#changeInfo
-        // status is more reliable (in my case)
-        // use "alert(JSON.stringify(changeInfo))" to check what's available and works in your case
-        if (changeInfo.status === "complete") {
-            chrome.tabs
-                .sendMessage(tabId, {
-                    message: "TabUpdated",
-                })
-                .catch(console.error);
-        }
-    });
+    chrome.tabs.onUpdated.addListener(handleUpdateUrl);
 });
+
+chrome.runtime.onStartup.addListener(() => {
+    chrome.tabs.onUpdated.addListener(handleUpdateUrl);
+});
+
+const handleUpdateUrl = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, _: chrome.tabs.Tab) => {
+    if (changeInfo.status === "complete") {
+        chrome.tabs
+            .sendMessage(tabId, {
+                message: "TabUpdated",
+            })
+            .catch(console.error);
+    }
+};
