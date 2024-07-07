@@ -33,6 +33,7 @@ func (hc *Client) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", hc.healthHandler)
 	mux.HandleFunc("POST /search", hc.searchHandler)
+	mux.HandleFunc("POST /search-stream", hc.searchStreamHandler)
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", hc.config.Port),
@@ -89,6 +90,73 @@ func (hc *Client) searchHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
 		log.Printf("[ERROR] Failed to write response: %v", err)
+	}
+}
+
+type StreamSearchResponse struct {
+	Data    *services.ProviderSearchResponse `json:"data"`
+	HasMore bool                             `json:"hasMore"`
+}
+
+func (hc *Client) searchStreamHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	ctx, cancel := context.WithCancel(r.Context())
+	defer cancel()
+
+	var req SearchRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	resultChan := hc.multiSearch.SearchStream(req.Query, req.Meta)
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
+		return
+	}
+
+	writeResponse := func(data *services.ProviderSearchResponse, hasMore bool) error {
+		response := &StreamSearchResponse{
+			Data:    data,
+			HasMore: hasMore,
+		}
+
+		respData, err := json.Marshal(response)
+		if err != nil {
+			return fmt.Errorf("failed to marshal response: %w", err)
+		}
+
+		_, err = fmt.Fprintf(w, "data: %s\n\n", respData)
+		if err != nil {
+			return fmt.Errorf("failed to write response: %w", err)
+		}
+
+		flusher.Flush()
+		return nil
+	}
+
+	for {
+		select {
+		case <-ctx.Done():
+			log.Printf("[INFO] Client disconnected")
+			return
+		case providerResp, ok := <-resultChan:
+			if !ok {
+				if err := writeResponse(nil, false); err != nil {
+					log.Printf("[ERROR] %v", err)
+				}
+				return
+			}
+
+			if err := writeResponse(providerResp, true); err != nil {
+				log.Printf("[ERROR] %v", err)
+			}
+		}
 	}
 }
 

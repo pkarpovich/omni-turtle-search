@@ -26,31 +26,31 @@ export const Header = ({
         <div>
             <Dot
                 unfilled={hiddenProviders.includes(DotType.cubox)}
+                loading={providersStatus.cubox.isLoading}
                 onClick={onToggleProviderVisibility}
                 error={providersStatus.cubox.error}
                 type={DotType.cubox}
-                loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.logseq)}
+                loading={providersStatus.logseq.isLoading}
                 error={providersStatus.logseq.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.logseq}
-                loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.todoist)}
+                loading={providersStatus.todoist.isLoading}
                 error={providersStatus.todoist.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.todoist}
-                loading={isLoading}
             />
             <Dot
                 unfilled={hiddenProviders.includes(DotType.notion)}
+                loading={providersStatus.notion.isLoading}
                 error={providersStatus.notion.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.notion}
-                loading={isLoading}
             />
         </div>
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>

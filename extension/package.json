@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "extended-eventsource": "^1.4.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

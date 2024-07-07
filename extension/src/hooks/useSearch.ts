@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { DotType } from "../components/Dot.tsx";
-import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
+import { type Metadata } from "../types/metadata.ts";
 import { type SearchItem } from "../types/searchItem.ts";
-import { useChromeStorage } from "./useChromeStorage.ts";
+import { type AppEventSourceOptions, useEventSource } from "./useEventSource.ts";
 
 export type SearchResponse = {
     providerName: DotType;
@@ -15,12 +15,12 @@ type SearchResults = {
     toggleProviderVisibility: (provider: DotType) => void;
     providersStatus: SearchProviderStatus;
     hiddenProviders: DotType[];
-    error: Error | null;
     isLoading: boolean;
     data: SearchItem[];
 };
 
 export type ProviderStatus = {
+    isLoading?: boolean;
     status: boolean;
     error?: string;
     name: DotType;
@@ -36,95 +36,47 @@ export type SearchProviderStatus = {
 const DefaultSearchProviderStatus: SearchProviderStatus = {
     todoist: {
         name: DotType.todoist,
+        isLoading: true,
         status: false,
     },
     logseq: {
         name: DotType.logseq,
+        isLoading: true,
         status: false,
     },
     notion: {
         name: DotType.notion,
+        isLoading: true,
         status: false,
     },
     cubox: {
         name: DotType.cubox,
+        isLoading: true,
         status: false,
     },
 };
 
-type LogseqMetadata = {
-    workspace: string;
-    token: string;
-    url: string;
-};
-
-type Metadata = {
-    logseq: LogseqMetadata;
-};
-
-export const useSearch = (query: string): SearchResults => {
-    const [data, setData] = useState<SearchResponse[]>([]);
-    const [error, setError] = useState<Error | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+export const useSearch = (query: string, metadata: Metadata): SearchResults => {
     const [hiddenProviders, setHiddenProviders] = useState<DotType[]>([]);
 
-    const [baseUrl] = useChromeStorage<string>(BaseUrlKey, "");
-    const [logseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");
-    const [logseqToken] = useChromeStorage<string>(LogseqTokenKey, "");
-    const [logseqWorkspace] = useChromeStorage<string>(LogseqWorkspaceKey, "");
-
-    const metadata = useMemo<Metadata | null>(() => {
-        if (!logseqUrl) {
-            console.warn("Logseq URL is not set");
-        }
-
-        if (!logseqToken) {
-            console.warn("Logseq Token is not set");
-        }
-
-        if (!logseqWorkspace) {
-            console.warn("Logseq Workspace is not set");
-        }
-
-        if (!logseqUrl || !logseqToken || !logseqWorkspace) {
-            return null;
-        }
-
-        return {
-            logseq: {
-                workspace: logseqWorkspace,
-                token: logseqToken,
-                url: logseqUrl,
-            },
-        };
-    }, [logseqUrl, logseqToken, logseqWorkspace]);
-
-    useEffect(() => {
-        if (!metadata || !baseUrl) {
-            return;
-        }
-
-        setIsLoading(true);
-
-        fetch(`${baseUrl}/search`, {
-            body: JSON.stringify({
-                metadata,
-                query,
-            }),
+    const eventRequestOptions = useMemo<AppEventSourceOptions>(
+        () => ({
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ metadata, query }),
+            disableLogger: true,
+            disableRetry: true,
             method: "POST",
-        })
-            .then((response) => response.json())
-            .then((data: SearchResponse[]) => setData(data))
-            .catch(setError)
-            .finally(() => setIsLoading(false));
-    }, [query, metadata]);
+        }),
+        [metadata, query],
+    );
+
+    const { isLoading, events } = useEventSource<SearchResponse>(`${metadata.url}/search-stream`, eventRequestOptions);
 
     const processedData = useMemo(
         () =>
-            data
+            Array.from(events.values())
                 .filter((item) => !hiddenProviders.includes(item.providerName))
                 .reduce<SearchItem[]>(
                     (allItems, item) => [
@@ -138,23 +90,24 @@ export const useSearch = (query: string): SearchResults => {
                     [],
                 )
                 .sort((a, b) => b.updateTime.getTime() - a.updateTime.getTime()),
-        [data, hiddenProviders],
+        [events, hiddenProviders],
     );
 
     const providersStatus = useMemo<SearchProviderStatus>(
         () =>
-            data.reduce<SearchProviderStatus>(
+            Array.from(events.values()).reduce<SearchProviderStatus>(
                 (status, { providerName, error }) => ({
                     ...status,
                     [providerName]: {
                         name: providerName,
+                        isLoading: false,
                         status: !error,
                         error,
                     },
                 }),
                 DefaultSearchProviderStatus,
             ),
-        [data],
+        [events],
     );
 
     const toggleProviderVisibility = useCallback((provider: DotType) => {
@@ -163,5 +116,5 @@ export const useSearch = (query: string): SearchResults => {
         );
     }, []);
 
-    return { toggleProviderVisibility, data: processedData, hiddenProviders, providersStatus, isLoading, error };
+    return { toggleProviderVisibility, data: processedData, hiddenProviders, providersStatus, isLoading };
 };

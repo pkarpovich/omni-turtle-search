@@ -1,48 +1,22 @@
-import { useCallback } from "react";
-
 import styles from "./App.module.css";
-import { Header } from "./components/Header.tsx";
-import { SearchResultItem } from "./components/SearchResultItem.tsx";
-import { useChromeStorage } from "./hooks/useChromeStorage.ts";
+import { Search } from "./components/Search.tsx";
+import { useMetadata } from "./hooks/useMetadata.ts";
 import { useQuerySearch } from "./hooks/useQuerySearch.ts";
-import { useSearch } from "./hooks/useSearch.ts";
-
-const CollapseKey = "isCollapsed";
 
 export const App = () => {
     const query = useQuerySearch();
-    const { toggleProviderVisibility, hiddenProviders, providersStatus, isLoading, data } = useSearch(query);
-    const [isCollapsed, setIsCollapsed] = useChromeStorage<boolean>(CollapseKey, false);
-
-    const handleToggleCollapse = useCallback(() => {
-        setIsCollapsed((prev) => !prev);
-    }, []);
+    const metadata = useMetadata();
 
     return (
         <div className={styles.container}>
-            <Header
-                onToggleProviderVisibility={toggleProviderVisibility}
-                onCollapseChange={handleToggleCollapse}
-                providersStatus={providersStatus}
-                hiddenProviders={hiddenProviders}
-                isCollapsed={isCollapsed}
-                itemsLength={data.length}
-                isLoading={isLoading}
-            />
-            {!isCollapsed ? (
-                <ul>
-                    {data.map(({ providerName, description, updateTime, title, url, id }) => (
-                        <SearchResultItem
-                            providerName={providerName}
-                            description={description}
-                            date={updateTime}
-                            title={title}
-                            url={url}
-                            key={id}
-                        />
-                    ))}
-                </ul>
-            ) : null}
+            {metadata ? (
+                <Search metadata={metadata} query={query} />
+            ) : (
+                <div>
+                    <p>Set up the extension</p>
+                    <p>Go to the options page and set up the extension</p>
+                </div>
+            )}
         </div>
     );
 };

@@ -35,18 +35,7 @@ func (ms MultiSearch) Search(query string, metadata *provider.Metadata) ([]*Prov
 
 	for _, p := range ms {
 		wg.Go(func(context.Context) {
-			resp, err := p.Search(query, metadata)
-			if err != nil {
-				log.Printf("[ERROR] Search error: %v", err)
-
-				resp = &ProviderSearchResponse{
-					Items:        make([]ProviderSearchItem, 0),
-					ProviderName: p.GetName(),
-					Error:        err.Error(),
-				}
-			}
-
-			responses <- resp
+			responses <- ms.executeProviderSearch(p, query, metadata)
 		})
 	}
 
@@ -61,4 +50,37 @@ func (ms MultiSearch) Search(query string, metadata *provider.Metadata) ([]*Prov
 	}
 
 	return providerResponses, nil
+}
+
+func (ms MultiSearch) SearchStream(query string, metadata *provider.Metadata) <-chan *ProviderSearchResponse {
+	wg := syncs.NewSizedGroup(4)
+	responses := make(chan *ProviderSearchResponse, len(ms))
+
+	for _, p := range ms {
+		wg.Go(func(context.Context) {
+			responses <- ms.executeProviderSearch(p, query, metadata)
+		})
+	}
+
+	go func() {
+		wg.Wait()
+		close(responses)
+	}()
+
+	return responses
+}
+
+func (ms MultiSearch) executeProviderSearch(provider Provider, query string, metadata *provider.Metadata) *ProviderSearchResponse {
+	resp, err := provider.Search(query, metadata)
+	if err != nil {
+		log.Printf("[ERROR] Provider: %s, search error: %v", provider.GetName(), err)
+
+		resp = &ProviderSearchResponse{
+			Items:        make([]ProviderSearchItem, 0),
+			ProviderName: provider.GetName(),
+			Error:        err.Error(),
+		}
+	}
+
+	return resp
 }
