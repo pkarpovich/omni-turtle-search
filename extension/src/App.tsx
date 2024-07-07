@@ -1,4 +1,5 @@
 import styles from "./App.module.css";
+import { ExtensionSetupPrompt } from "./components/ExtensionSetupPrompt.tsx";
 import { Search } from "./components/Search.tsx";
 import { useMetadata } from "./hooks/useMetadata.ts";
 import { useQuerySearch } from "./hooks/useQuerySearch.ts";
@@ -9,14 +10,7 @@ export const App = () => {
 
     return (
         <div className={styles.container}>
-            {metadata ? (
-                <Search metadata={metadata} query={query} />
-            ) : (
-                <div>
-                    <p>Set up the extension</p>
-                    <p>Go to the options page and set up the extension</p>
-                </div>
-            )}
+            {metadata ? <Search metadata={metadata} query={query} /> : <ExtensionSetupPrompt />}
         </div>
     );
 };

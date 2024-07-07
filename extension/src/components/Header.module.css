@@ -20,3 +20,16 @@
     gap: 10px;
     color: orange;
 }
+
+.optionsButton {
+    background-color: var(--primary-200);
+    color: var(--search-result-title);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--primary-300);
+    }
+}

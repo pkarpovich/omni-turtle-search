@@ -13,6 +13,7 @@
     -moz-osx-font-smoothing: grayscale;
 
     --primary-200: #cfcfd1;
+    --primary-300: #9f9fa5;
     --search-result-title: #18181a;;
     --search-result-title-hover: #6c5edc;;
     --result-item-title-border: #9f9fa5;
@@ -22,6 +23,7 @@
 
     @media (prefers-color-scheme: dark) {
         --primary-200: #454549;
+        --primary-300: #3a3a3e;
         --search-result-title: #fff;
         --search-result-title-hover: #c0b8ff;
         --result-item-title-border: #acacaf;

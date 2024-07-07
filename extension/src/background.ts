@@ -15,3 +15,10 @@ const handleUpdateUrl = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, _
             .catch(console.error);
     }
 };
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "openOptionsPage") {
+        chrome.runtime.openOptionsPage().catch(console.error);
+        sendResponse({ status: "Options page opened" });
+    }
+});
