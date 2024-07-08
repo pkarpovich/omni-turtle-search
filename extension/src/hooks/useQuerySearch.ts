@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-const getQuerySearch = (): string => {
+import { useMutationObservable } from "./useMutationObservable.ts";
+
+const getDefaultQuerySearch = (): string => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("q") ?? "";
 };
 
 export const useQuerySearch = (): string => {
-    const [query, setQuery] = useState<string>(getQuerySearch);
+    const [query, setQuery] = useState<string>(getDefaultQuerySearch);
 
-    useEffect(() => {
-        chrome.runtime.onMessage.addListener((request) => {
-            if (request.message === "TabUpdated") {
-                setQuery(getQuerySearch);
+    const handleSearchBarMutation = useCallback((mutations: MutationRecord[]) => {
+        for (const mutation of mutations) {
+            if (mutation.type === "childList" && mutation.target instanceof HTMLTextAreaElement) {
+                setQuery(mutation.target.defaultValue);
             }
-        });
+        }
     }, []);
+
+    useMutationObservable("#searchBar", handleSearchBarMutation);
 
     return query;
 };
