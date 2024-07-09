@@ -1,9 +1,11 @@
-import { useCallback } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useCallback, useRef } from "react";
 
 import { useChromeStorage } from "../hooks/useChromeStorage.ts";
 import { useSearch } from "../hooks/useSearch.ts";
 import { type Metadata } from "../types/metadata.ts";
 import { Header } from "./Header.tsx";
+import { SearchList } from "./SearchList.tsx";
 import { SearchResultItem } from "./SearchResultItem.tsx";
 
 const CollapseKey = "isCollapsed";
@@ -32,20 +34,7 @@ export const Search = ({ metadata, query }: Props) => {
                 itemsLength={data.length}
                 isLoading={isLoading}
             />
-            {!isCollapsed ? (
-                <ul>
-                    {data.map(({ providerName, description, updateTime, title, url, id }) => (
-                        <SearchResultItem
-                            providerName={providerName}
-                            description={description}
-                            date={updateTime}
-                            title={title}
-                            url={url}
-                            key={id}
-                        />
-                    ))}
-                </ul>
-            ) : null}
+            {!isCollapsed && data.length ? <SearchList data={data} /> : null}
         </>
     );
 };
