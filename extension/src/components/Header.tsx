@@ -8,6 +8,7 @@ type Props = {
     providersStatus: SearchProviderStatus;
     onCollapseChange: () => void;
     hiddenProviders: DotType[];
+    isStandalone: boolean;
     isCollapsed: boolean;
     itemsLength: number;
     isLoading: boolean;
@@ -18,6 +19,7 @@ export const Header = ({
     onCollapseChange,
     providersStatus,
     hiddenProviders,
+    isStandalone,
     itemsLength,
     isCollapsed,
     isLoading,
@@ -56,15 +58,19 @@ export const Header = ({
         <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
         <div className={styles.actionsContainer}>
             <Logo />
-            {isCollapsed ? (
-                <button className={styles.expandButton} onClick={onCollapseChange} type="button">
-                    &#x25B2;
-                </button>
-            ) : (
-                <button className={styles.collapseButton} onClick={onCollapseChange} type="button">
-                    &#x25BC;
-                </button>
-            )}
+            {!isStandalone ? (
+                <div>
+                    {isCollapsed ? (
+                        <button className={styles.expandButton} onClick={onCollapseChange} type="button">
+                            &#x25B2;
+                        </button>
+                    ) : (
+                        <button className={styles.collapseButton} onClick={onCollapseChange} type="button">
+                            &#x25BC;
+                        </button>
+                    )}
+                </div>
+            ) : null}
         </div>
     </header>
 );

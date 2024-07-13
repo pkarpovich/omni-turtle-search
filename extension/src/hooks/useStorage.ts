@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-export const storage = {
+type StoreProvider = {
+    get<T>(key: string, defaultValue?: T): Promise<T>;
+    set<T>(key: string, value: T): Promise<T>;
+};
+
+const chromeStorage: StoreProvider = {
     get: <T>(key: string, defaultValue?: T) => {
         const keyObj = defaultValue === undefined ? key : { [key]: defaultValue };
         return new Promise<T>((resolve, reject) => {
@@ -22,11 +27,29 @@ export const storage = {
         }),
 };
 
-export const useChromeStorage = <T>(key: string, defaultValue: T) => {
+const localStorage: StoreProvider = {
+    get: <T>(key: string, defaultValue?: T) => {
+        const value = window.localStorage.getItem(key);
+        if (value === null) {
+            return Promise.resolve(defaultValue);
+        }
+        return Promise.resolve(JSON.parse(value));
+    },
+    set: <T>(key: string, value: T) => {
+        window.localStorage.setItem(key, JSON.stringify(value));
+        return Promise.resolve(value);
+    },
+};
+
+const isExtension = typeof chrome !== "undefined" && chrome.storage;
+
+const storeProvider = isExtension ? chromeStorage : localStorage;
+
+export const useStorage = <T>(key: string, defaultValue: T) => {
     const [value, setValue] = useState<T>(defaultValue);
 
     useEffect(() => {
-        storage.get<T>(key, defaultValue).then(setValue).catch(console.error);
+        storeProvider.get<T>(key, defaultValue).then(setValue).catch(console.error);
     }, [key]);
 
     const handleSetValue = useCallback(
@@ -35,7 +58,7 @@ export const useChromeStorage = <T>(key: string, defaultValue: T) => {
                 const valueToStore =
                     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
                     typeof newValue === "function" ? (newValue as (prevValue: T) => T)(prevValue) : newValue;
-                storage.set(key, valueToStore).catch(console.error);
+                storeProvider.set(key, valueToStore).catch(console.error);
                 return valueToStore;
             });
         },

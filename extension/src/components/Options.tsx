@@ -1,6 +1,6 @@
 import { type ChangeEvent, useCallback } from "react";
 
-import { useChromeStorage } from "../hooks/useChromeStorage.ts";
+import { useStorage } from "../hooks/useStorage.ts";
 import styles from "./Options.module.css";
 
 export const BaseUrlKey = "baseUrl";
@@ -9,10 +9,10 @@ export const LogseqTokenKey = "loggseqToken";
 export const LogseqWorkspaceKey = "logseqWorkspace";
 
 export const Options = () => {
-    const [baseUrl, setBaseUrl] = useChromeStorage<string>(BaseUrlKey, "");
-    const [logseqUrl, setLogseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");
-    const [logseqToken, setLogseqToken] = useChromeStorage<string>(LogseqTokenKey, "");
-    const [logseqWorkspace, setLogseqWorkspace] = useChromeStorage<string>(LogseqWorkspaceKey, "");
+    const [baseUrl, setBaseUrl] = useStorage<string>(BaseUrlKey, "");
+    const [logseqUrl, setLogseqUrl] = useStorage<string>(LogseqUrlKey, "");
+    const [logseqToken, setLogseqToken] = useStorage<string>(LogseqTokenKey, "");
+    const [logseqWorkspace, setLogseqWorkspace] = useStorage<string>(LogseqWorkspaceKey, "");
 
     const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const { value, name } = e.target;

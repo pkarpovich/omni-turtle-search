@@ -39,6 +39,7 @@
     "prettier": "^3.3.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-plugin-svgr": "^4.2.0",
     "vite-plugin-web-extension": "^4.1.4"
   }
 }

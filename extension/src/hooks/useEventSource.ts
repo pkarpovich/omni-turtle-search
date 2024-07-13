@@ -15,6 +15,7 @@ export const useEventSource = <T>(url: string, options: AppEventSourceOptions = 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        setEvents(new Map<string, T>());
         setIsLoading(true);
 
         const eventSource = new EventSource(url, options);

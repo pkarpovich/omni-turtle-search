@@ -7,8 +7,16 @@ const getDefaultQuerySearch = (): string => {
     return urlParams.get("q") ?? "";
 };
 
-export const useQuerySearch = (): string => {
+export const useQuerySearch = (): [string, (value: string) => void] => {
     const [query, setQuery] = useState<string>(getDefaultQuerySearch);
+
+    const handleChange = useCallback((newValue: string) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("q", newValue);
+        window.history.replaceState({}, "", `${window.location.pathname}?${urlParams.toString()}`);
+
+        setQuery(newValue);
+    }, []);
 
     const handleSearchBarMutation = useCallback((mutations: MutationRecord[]) => {
         for (const mutation of mutations) {
@@ -20,5 +28,5 @@ export const useQuerySearch = (): string => {
 
     useMutationObservable("#searchBar", handleSearchBarMutation);
 
-    return query;
+    return [query, handleChange];
 };

@@ -8,26 +8,25 @@ const RowHeight = 130;
 const Gap = 20;
 
 type Props = {
+    isStandalone: boolean;
     data: SearchItem[];
 };
 
-export const SearchList = ({ data }: Props) => {
+export const SearchList = ({ isStandalone, data }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    console.log(data);
 
     const virtualizer = useVirtualizer({
         getScrollElement: () => containerRef.current,
         estimateSize: () => RowHeight,
         count: data.length,
-        debug: true,
         gap: Gap,
     });
 
     return (
         <div
             style={{
+                height: isStandalone ? "calc(100vh - 160px)" : "650px",
                 overflowY: "auto",
-                height: `600px`,
             }}
             ref={containerRef}
         >

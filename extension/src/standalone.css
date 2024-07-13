@@ -1,0 +1,22 @@
+body {
+    background: var(--app-frame-bg);
+    color: var(--app-text);
+    font-family: var(--font-main);
+    line-height: 1.45;
+    margin: 0;
+    padding: 0;
+    text-rendering: optimizeLegibility;
+    height: 100vh;
+}
+
+body > div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+a {
+    line-height: 1.45;
+}

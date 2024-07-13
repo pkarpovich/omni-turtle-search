@@ -1,23 +1,24 @@
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
-import { useChromeStorage } from "../hooks/useChromeStorage.ts";
 import { useSearch } from "../hooks/useSearch.ts";
+import { useStorage } from "../hooks/useStorage.ts";
 import { type Metadata } from "../types/metadata.ts";
 import { Header } from "./Header.tsx";
+import { Input } from "./Input.tsx";
 import { SearchList } from "./SearchList.tsx";
-import { SearchResultItem } from "./SearchResultItem.tsx";
 
 const CollapseKey = "isCollapsed";
 
 type Props = {
+    onChange: (query: string) => void;
+    isStandalone: boolean;
     metadata: Metadata;
     query: string;
 };
 
-export const Search = ({ metadata, query }: Props) => {
+export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
     const { toggleProviderVisibility, providersStatus, hiddenProviders, isLoading, data } = useSearch(query, metadata);
-    const [isCollapsed, setIsCollapsed] = useChromeStorage<boolean>(CollapseKey, false);
+    const [isCollapsed, setIsCollapsed] = useStorage<boolean>(CollapseKey, false);
 
     const handleToggleCollapse = useCallback(() => {
         setIsCollapsed((prev) => !prev);
@@ -30,11 +31,13 @@ export const Search = ({ metadata, query }: Props) => {
                 onCollapseChange={handleToggleCollapse}
                 providersStatus={providersStatus}
                 hiddenProviders={hiddenProviders}
+                isStandalone={isStandalone}
                 isCollapsed={isCollapsed}
                 itemsLength={data.length}
                 isLoading={isLoading}
             />
-            {!isCollapsed && data.length ? <SearchList data={data} /> : null}
+            {isStandalone ? <Input initialQuery={query} onChange={onChange} /> : null}
+            {!isCollapsed && data.length ? <SearchList isStandalone={isStandalone} data={data} /> : null}
         </>
     );
 };

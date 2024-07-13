@@ -1,3 +1,10 @@
 .container {
     color: #646cff;
 }
+
+.standaloneContainer {
+    padding: 20px;
+    overflow-y: hidden;
+    max-height: 100vh;
+    box-sizing: border-box;
+}

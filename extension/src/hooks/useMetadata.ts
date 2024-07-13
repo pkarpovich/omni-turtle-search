@@ -2,13 +2,13 @@ import { useMemo } from "react";
 
 import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
 import { type Metadata } from "../types/metadata.ts";
-import { useChromeStorage } from "./useChromeStorage.ts";
+import { useStorage } from "./useStorage.ts";
 
 export const useMetadata = (): Metadata | null => {
-    const [baseUrl] = useChromeStorage<string>(BaseUrlKey, "");
-    const [logseqUrl] = useChromeStorage<string>(LogseqUrlKey, "");
-    const [logseqToken] = useChromeStorage<string>(LogseqTokenKey, "");
-    const [logseqWorkspace] = useChromeStorage<string>(LogseqWorkspaceKey, "");
+    const [baseUrl] = useStorage<string>(BaseUrlKey, "");
+    const [logseqUrl] = useStorage<string>(LogseqUrlKey, "");
+    const [logseqToken] = useStorage<string>(LogseqTokenKey, "");
+    const [logseqWorkspace] = useStorage<string>(LogseqWorkspaceKey, "");
 
     return useMemo<Metadata | null>(() => {
         if (!logseqUrl) {
