@@ -19,7 +19,8 @@ type NotionConfig struct {
 }
 
 type HttpConfig struct {
-	Port int `env:"HTTP_PORT" env-default:"8080"`
+	Port           int    `env:"HTTP_PORT" env-default:"8080"`
+	BaseStaticPath string `env:"BASE_STATIC_PATH" env-default:"extension/dist-web"`
 }
 
 type Config struct {

@@ -184,9 +184,9 @@ func (hc *Client) healthHandler(w http.ResponseWriter, r *http.Request) {
 func (hc *Client) fileHandler(w http.ResponseWriter, r *http.Request) {
 	fileMatcher := regexp.MustCompile(`^/.*\..+$`)
 	if fileMatcher.MatchString(r.URL.Path) {
-		http.ServeFile(w, r, "extension/dist-web/"+r.URL.Path[1:])
+		http.ServeFile(w, r, fmt.Sprintf("%s/%s", hc.config.BaseStaticPath, r.URL.Path[1:]))
 		return
 	}
 
-	http.ServeFile(w, r, "extension/dist-web/index.html")
+	http.ServeFile(w, r, fmt.Sprintf("%s/%s", hc.config.BaseStaticPath, "index.html"))
 }

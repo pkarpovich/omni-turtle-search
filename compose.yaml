@@ -10,6 +10,7 @@ services:
       CUBOX_TOKEN: ${CUBOX_TOKEN}
       TODOIST_TOKEN: ${TODOIST_TOKEN}
       NOTION_TOKEN: ${NOTION_TOKEN}
+      BASE_STATIC_PATH: /static
       HTTP_PORT: 8080
     networks:
       - proxy
