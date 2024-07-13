@@ -14,6 +14,7 @@
 
 .formLabel {
     width: 100px;
+    color: var(--primary);
 }
 
 .formInput {
