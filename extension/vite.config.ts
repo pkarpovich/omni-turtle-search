@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import react from "@vitejs/plugin-react";
 import webExtension from "vite-plugin-web-extension";
 import svgr from "vite-plugin-svgr";
@@ -12,7 +12,7 @@ export default defineConfig({
     },
     plugins: [
         react(),
-        svgr(),
+        svgr({ include: '**/*.svg' }),
         isExtensionBuild && webExtension({
             disableAutoLaunch: true,
         }),

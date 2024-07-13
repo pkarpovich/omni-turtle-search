@@ -1,5 +1,6 @@
 import { type SearchProviderStatus } from "../hooks/useSearch.ts";
-import { Dot, DotType } from "./Dot.tsx";
+import { DotType } from "../types/dotType.ts";
+import { Dot } from "./Dot.tsx";
 import styles from "./Header.module.css";
 import { Logo } from "./Logo.tsx";
 

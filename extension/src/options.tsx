@@ -1,4 +1,3 @@
-// eslint-disable-next-line filename-rules/match
 import "./index.css";
 
 import React from "react";

@@ -1,14 +1,8 @@
 import clsx from "clsx";
 import { useCallback } from "react";
 
+import { DotType } from "../types/dotType.ts";
 import styles from "./Dot.module.css";
-
-export enum DotType {
-    todoist = "todoist",
-    logseq = "logseq",
-    notion = "notion",
-    cubox = "cubox",
-}
 
 type Props = {
     onClick?: (provider: DotType) => void;

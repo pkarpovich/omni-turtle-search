@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { DotType } from "../components/Dot.tsx";
+import { DotType } from "../types/dotType.ts";
 import { type Metadata } from "../types/metadata.ts";
 import { type SearchItem } from "../types/searchItem.ts";
 import { type AppEventSourceOptions, useEventSource } from "./useEventSource.ts";

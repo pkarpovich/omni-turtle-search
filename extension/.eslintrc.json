@@ -9,6 +9,11 @@
       "jsx": true
     }
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "reportUnusedDisableDirectives": true,
   "plugins": [
     "@typescript-eslint",
@@ -30,7 +35,8 @@
     "plugin:@typescript-eslint/strict",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
-    "plugin:perfectionist/recommended-line-length"
+    "plugin:perfectionist/recommended-line-length",
+    "plugin:react-hooks/recommended"
   ],
   "rules": {
     "no-unused-vars": "error",
@@ -305,6 +311,12 @@
     },
     {
       "files": ["app/**/*", "hooks/**/*"],
+      "rules": {
+        "filename-rules/match": "off"
+      }
+    },
+    {
+      "files": ["options.tsx", "content.tsx", "main.tsx"],
       "rules": {
         "filename-rules/match": "off"
       }

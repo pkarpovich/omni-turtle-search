@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
-import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../components/Options.tsx";
 import { type Metadata } from "../types/metadata.ts";
+import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../types/storageKeys.ts";
 import { useStorage } from "./useStorage.ts";
 
 export const useMetadata = (): Metadata | null => {
@@ -35,5 +35,5 @@ export const useMetadata = (): Metadata | null => {
             },
             url: baseUrl,
         };
-    }, [logseqUrl, logseqToken, logseqWorkspace]);
+    }, [logseqUrl, logseqToken, logseqWorkspace, baseUrl]);
 };

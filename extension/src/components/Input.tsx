@@ -1,7 +1,7 @@
 import { type ChangeEvent, type KeyboardEvent, type MouseEvent, useCallback, useState } from "react";
 
-import ClearIcon from "../assets/clear-icon.svg?react";
-import SearchIcon from "../assets/search-icon.svg?react";
+import ClearIcon from "../assets/clear-icon.svg";
+import SearchIcon from "../assets/search-icon.svg";
 import styles from "./Input.module.css";
 
 type Props = {
@@ -30,7 +30,7 @@ export const Input = ({ initialQuery, onChange }: Props) => {
 
             onChange(value);
         },
-        [value],
+        [onChange, value],
     );
 
     const handleEnterClick = useCallback(

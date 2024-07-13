@@ -58,3 +58,6 @@ vite.config.ts
 # css
 postcss.config.js
 tailwind.config.ts
+
+/dist-extension
+/dist-web

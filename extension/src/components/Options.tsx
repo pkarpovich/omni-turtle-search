@@ -1,12 +1,8 @@
 import { type ChangeEvent, useCallback } from "react";
 
 import { useStorage } from "../hooks/useStorage.ts";
+import { BaseUrlKey, LogseqTokenKey, LogseqUrlKey, LogseqWorkspaceKey } from "../types/storageKeys.ts";
 import styles from "./Options.module.css";
-
-export const BaseUrlKey = "baseUrl";
-export const LogseqUrlKey = "logseqUrl";
-export const LogseqTokenKey = "loggseqToken";
-export const LogseqWorkspaceKey = "logseqWorkspace";
 
 export const Options = () => {
     const [baseUrl, setBaseUrl] = useStorage<string>(BaseUrlKey, "");
@@ -14,27 +10,30 @@ export const Options = () => {
     const [logseqToken, setLogseqToken] = useStorage<string>(LogseqTokenKey, "");
     const [logseqWorkspace, setLogseqWorkspace] = useStorage<string>(LogseqWorkspaceKey, "");
 
-    const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        const { value, name } = e.target;
+    const handleChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            const { value, name } = e.target;
 
-        switch (name) {
-            case BaseUrlKey:
-                setBaseUrl(value);
-                break;
+            switch (name) {
+                case BaseUrlKey:
+                    setBaseUrl(value);
+                    break;
 
-            case LogseqUrlKey:
-                setLogseqUrl(value);
-                break;
+                case LogseqUrlKey:
+                    setLogseqUrl(value);
+                    break;
 
-            case LogseqTokenKey:
-                setLogseqToken(value);
-                break;
+                case LogseqTokenKey:
+                    setLogseqToken(value);
+                    break;
 
-            case LogseqWorkspaceKey:
-                setLogseqWorkspace(value);
-                break;
-        }
-    }, []);
+                case LogseqWorkspaceKey:
+                    setLogseqWorkspace(value);
+                    break;
+            }
+        },
+        [setBaseUrl, setLogseqToken, setLogseqUrl, setLogseqWorkspace],
+    );
 
     return (
         <form className={styles.form}>

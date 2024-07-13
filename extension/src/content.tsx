@@ -1,4 +1,3 @@
-// eslint-disable-next-line filename-rules/match
 import React from "react";
 import ReactDOM from "react-dom/client";
 

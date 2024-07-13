@@ -1,4 +1,4 @@
-import { type DotType } from "../components/Dot.tsx";
+import { DotType } from "./dotType.ts";
 
 export type SearchItem = {
     providerName: DotType;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type StoreProvider = {
     get<T>(key: string, defaultValue?: T): Promise<T>;
@@ -50,20 +50,7 @@ export const useStorage = <T>(key: string, defaultValue: T) => {
 
     useEffect(() => {
         storeProvider.get<T>(key, defaultValue).then(setValue).catch(console.error);
-    }, [key]);
+    }, [defaultValue, key]);
 
-    const handleSetValue = useCallback(
-        (newValue: ((prevValue: T) => T) | T) => {
-            setValue((prevValue) => {
-                const valueToStore =
-                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-                    typeof newValue === "function" ? (newValue as (prevValue: T) => T)(prevValue) : newValue;
-                storeProvider.set(key, valueToStore).catch(console.error);
-                return valueToStore;
-            });
-        },
-        [key],
-    );
-
-    return [value, handleSetValue] as const;
+    return [value, setValue] as const;
 };

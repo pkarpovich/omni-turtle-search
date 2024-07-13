@@ -22,7 +22,7 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
 
     const handleToggleCollapse = useCallback(() => {
         setIsCollapsed((prev) => !prev);
-    }, []);
+    }, [setIsCollapsed]);
 
     return (
         <>

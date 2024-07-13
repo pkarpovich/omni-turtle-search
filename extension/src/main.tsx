@@ -1,4 +1,3 @@
-// eslint-disable-next-line filename-rules/match
 import "./index.css";
 import "./reset.css";
 import "./standalone.css";

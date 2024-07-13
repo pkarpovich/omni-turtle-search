@@ -1,7 +1,8 @@
 import clsx from "clsx";
 
+import { DotType } from "../types/dotType.ts";
 import { formatDate } from "../utils/formatDate.ts";
-import { Dot, DotType } from "./Dot.tsx";
+import { Dot } from "./Dot.tsx";
 import styles from "./SearchResultItem.module.css";
 
 type Props = {
