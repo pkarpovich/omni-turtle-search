@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
 	"time"
 )
@@ -34,6 +35,7 @@ func (hc *Client) Start() {
 	mux.HandleFunc("GET /health", hc.healthHandler)
 	mux.HandleFunc("POST /search", hc.searchHandler)
 	mux.HandleFunc("POST /search-stream", hc.searchStreamHandler)
+	mux.HandleFunc("GET /", hc.fileHandler)
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", hc.config.Port),
@@ -113,6 +115,11 @@ func (hc *Client) searchStreamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if req.Query == "" {
+		http.Error(w, "Query is required", http.StatusBadRequest)
+		return
+	}
+
 	resultChan := hc.multiSearch.SearchStream(req.Query, req.Meta)
 	flusher, ok := w.(http.Flusher)
 	if !ok {
@@ -172,4 +179,14 @@ func (hc *Client) healthHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("[ERROR] Failed to write response: %v", err)
 	}
+}
+
+func (hc *Client) fileHandler(w http.ResponseWriter, r *http.Request) {
+	fileMatcher := regexp.MustCompile(`^/.*\..+$`)
+	if fileMatcher.MatchString(r.URL.Path) {
+		http.ServeFile(w, r, "extension/dist-web/"+r.URL.Path[1:])
+		return
+	}
+
+	http.ServeFile(w, r, "extension/dist-web/index.html")
 }

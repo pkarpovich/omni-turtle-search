@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:web": "BUILD_TARGET=web pnpm build",
+    "build:extension": "BUILD_TARGET=extension pnpm build",
     "build": "tsc && vite build",
     "lint": "tsc && eslint .",
     "list:fix": "eslint . --fix",
