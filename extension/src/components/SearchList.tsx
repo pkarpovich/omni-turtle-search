@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { SearchItem } from "../types/searchItem.ts";
 import { SearchResultItem } from "./SearchResultItem.tsx";
 
+const MaxHeight = 600;
 const RowHeight = 130;
 const Gap = 20;
 
@@ -22,10 +23,15 @@ export const SearchList = ({ isStandalone, data }: Props) => {
         gap: Gap,
     });
 
+    const needsBorder = !isStandalone && virtualizer.getTotalSize() > MaxHeight;
+
     return (
         <div
             style={{
-                height: isStandalone ? "calc(100vh - 160px)" : "650px",
+                borderBottom: needsBorder ? "1px solid var(--primary-200)" : "none",
+                maxHeight: isStandalone ? "calc(100vh - 160px)" : `${MaxHeight}px`,
+                padding: "0 10px 10px 10px",
+                boxSizing: "content-box",
                 overflowY: "auto",
             }}
             ref={containerRef}
