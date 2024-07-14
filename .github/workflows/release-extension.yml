@@ -1,0 +1,42 @@
+name: Update Chrome Extension
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-chrome-extension:
+    name: Build Chrome Extension Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: ./extensions
+        run: pnpm install
+
+      - name: Build
+        working-directory: ./extensions
+        run: |-
+          pnpm build:extension
+          zip -r omni-turtle-search-extension-${{ github.sha }}.zip dist-extension
+
+      - name: Archive chrome-extension artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omni-turtle-search-extension-${{ github.sha }}
+          path: ./extensions/omni-turtle-search-extension-${{ github.sha }}.zip
