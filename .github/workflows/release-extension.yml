@@ -9,6 +9,8 @@ jobs:
   build-chrome-extension:
     name: Build Chrome Extension Artifact
     runs-on: ubuntu-latest
+    outputs:
+      artifact_path: ${{ steps.archive.outputs.artifact_path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,7 +37,40 @@ jobs:
           zip -r omni-turtle-search-extension-${{ github.sha }}.zip dist-extension
 
       - name: Archive chrome-extension artifact
+        id: archive
         uses: actions/upload-artifact@v4
         with:
           name: omni-turtle-search-extension-${{ github.sha }}
           path: extension/omni-turtle-search-extension-${{ github.sha }}.zip
+
+  release:
+    name: Release Chrome Extension
+    needs: build-chrome-extension
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: download the artifact from the previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: omni-turtle-search-extension-${{ github.sha }}
+
+      - name: create release
+        uses: ncipollo/release-action@v1
+        id: createRelease
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: 'false'
+
+      - name: Upload zip asset to the release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.createRelease.outputs.upload_url }}
+          asset_path: omni-turtle-search-extension-${{ github.sha }}.zip
+          asset_name: omni-turtle-search-extension-${{ github.sha }}.zip
+          asset_content_type: application/zip
