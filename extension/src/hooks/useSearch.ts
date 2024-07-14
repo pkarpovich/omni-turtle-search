@@ -22,6 +22,7 @@ type SearchResults = {
 export type ProviderStatus = {
     isLoading?: boolean;
     status: boolean;
+    length: number;
     error?: string;
     name: DotType;
 };
@@ -38,21 +39,25 @@ const DefaultSearchProviderStatus: SearchProviderStatus = {
         name: DotType.todoist,
         isLoading: true,
         status: false,
+        length: 0,
     },
     logseq: {
         name: DotType.logseq,
         isLoading: true,
         status: false,
+        length: 0,
     },
     notion: {
         name: DotType.notion,
         isLoading: true,
         status: false,
+        length: 0,
     },
     cubox: {
         name: DotType.cubox,
         isLoading: true,
         status: false,
+        length: 0,
     },
 };
 
@@ -72,7 +77,11 @@ export const useSearch = (query: string, metadata: Metadata): SearchResults => {
         [metadata, query],
     );
 
-    const { isLoading, events } = useEventSource<SearchResponse>(`${metadata.url}/search-stream`, eventRequestOptions);
+    const { isLoading, events } = useEventSource<SearchResponse>(
+        `${metadata.url}/search-stream`,
+        query,
+        eventRequestOptions,
+    );
 
     const processedData = useMemo(
         () =>
@@ -99,6 +108,7 @@ export const useSearch = (query: string, metadata: Metadata): SearchResults => {
                 (status, { providerName, error }) => ({
                     ...status,
                     [providerName]: {
+                        length: events.get(providerName)?.items.length ?? 0,
                         name: providerName,
                         isLoading: false,
                         status: !error,

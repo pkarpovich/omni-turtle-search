@@ -10,11 +10,19 @@ type Response<T> = {
     isLoading: boolean;
 };
 
-export const useEventSource = <T>(url: string, options: AppEventSourceOptions = DefaultOptions): Response<T> => {
+export const useEventSource = <T>(
+    url: string,
+    query: string,
+    options: AppEventSourceOptions = DefaultOptions,
+): Response<T> => {
     const [events, setEvents] = useState<Map<string, T>>(new Map<string, T>());
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!query) {
+            return;
+        }
+
         setEvents(new Map<string, T>());
         setIsLoading(true);
 

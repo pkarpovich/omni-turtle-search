@@ -16,9 +16,10 @@
 .actionsContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 10px;
     color: orange;
+    flex: 1;
 }
 
 .optionsButton {
@@ -32,4 +33,12 @@
     &:hover {
         background-color: var(--primary-300);
     }
+}
+
+.dotsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    flex: 1;
 }

@@ -52,7 +52,7 @@ export const Input = ({ initialQuery, onChange }: Props) => {
     return (
         <div className={styles.container}>
             <textarea
-                placeholder="Let's fetch ..."
+                placeholder="Let's discover hidden gems..."
                 onKeyDown={handleEnterClick}
                 className={styles.input}
                 onChange={handleChange}

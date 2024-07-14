@@ -9,11 +9,12 @@ type Props = {
     unfilled?: boolean;
     loading?: boolean;
     small?: boolean;
+    length?: number;
     error?: string;
     type: DotType;
 };
 
-export const Dot = ({ unfilled, loading, onClick, error, small, type }: Props) => {
+export const Dot = ({ unfilled, loading, onClick, length, error, small, type }: Props) => {
     const handleClick = useCallback(() => {
         if (onClick && !loading && !error) {
             onClick(type);
@@ -21,24 +22,27 @@ export const Dot = ({ unfilled, loading, onClick, error, small, type }: Props) =
     }, [onClick, type, loading, error]);
 
     return (
-        <button
-            className={clsx(
-                {
-                    [styles.pointer]: Boolean(onClick) && !loading && !error,
-                    [styles.unfilled]: Boolean(unfilled) && !loading,
-                    [styles.todoistDot]: type === DotType.todoist,
-                    [styles.logseqDot]: type === DotType.logseq,
-                    [styles.notionDot]: type === DotType.notion,
-                    [styles.error]: Boolean(error) && !loading,
-                    [styles.cuboxDot]: type === DotType.cubox,
-                    [styles.loading]: Boolean(loading),
-                    [styles.small]: Boolean(small),
-                },
-                styles.dot,
-            )}
-            onClick={handleClick}
-            title={error}
-            type="button"
-        />
+        <div className={styles.container}>
+            <button
+                className={clsx(
+                    {
+                        [styles.pointer]: Boolean(onClick) && !loading && !error,
+                        [styles.unfilled]: Boolean(unfilled) && !loading,
+                        [styles.todoistDot]: type === DotType.todoist,
+                        [styles.logseqDot]: type === DotType.logseq,
+                        [styles.notionDot]: type === DotType.notion,
+                        [styles.error]: Boolean(error) && !loading,
+                        [styles.cuboxDot]: type === DotType.cubox,
+                        [styles.loading]: Boolean(loading),
+                        [styles.small]: Boolean(small),
+                    },
+                    styles.dot,
+                )}
+                onClick={handleClick}
+                title={error}
+                type="button"
+            />
+            {!small ? <span className={styles.length}>{length}</span> : null}
+        </div>
     );
 };

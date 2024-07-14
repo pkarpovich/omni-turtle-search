@@ -35,6 +35,7 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
                 isCollapsed={isCollapsed}
                 itemsLength={data.length}
                 isLoading={isLoading}
+                query={query}
             />
             {isStandalone ? <Input initialQuery={query} onChange={onChange} /> : null}
             {!isCollapsed && data.length ? <SearchList isStandalone={isStandalone} data={data} /> : null}

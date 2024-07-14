@@ -13,6 +13,7 @@ type Props = {
     isCollapsed: boolean;
     itemsLength: number;
     isLoading: boolean;
+    query: string;
 };
 
 export const Header = ({
@@ -24,12 +25,14 @@ export const Header = ({
     itemsLength,
     isCollapsed,
     isLoading,
+    query,
 }: Props) => (
     <header className={styles.header}>
-        <div>
+        <div className={styles.dotsContainer}>
             <Dot
                 unfilled={hiddenProviders.includes(DotType.cubox)}
                 loading={providersStatus.cubox.isLoading}
+                length={providersStatus.cubox.length}
                 onClick={onToggleProviderVisibility}
                 error={providersStatus.cubox.error}
                 type={DotType.cubox}
@@ -37,6 +40,7 @@ export const Header = ({
             <Dot
                 unfilled={hiddenProviders.includes(DotType.logseq)}
                 loading={providersStatus.logseq.isLoading}
+                length={providersStatus.logseq.length}
                 error={providersStatus.logseq.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.logseq}
@@ -44,6 +48,7 @@ export const Header = ({
             <Dot
                 unfilled={hiddenProviders.includes(DotType.todoist)}
                 loading={providersStatus.todoist.isLoading}
+                length={providersStatus.todoist.length}
                 error={providersStatus.todoist.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.todoist}
@@ -51,12 +56,15 @@ export const Header = ({
             <Dot
                 unfilled={hiddenProviders.includes(DotType.notion)}
                 loading={providersStatus.notion.isLoading}
+                length={providersStatus.notion.length}
                 error={providersStatus.notion.error}
                 onClick={onToggleProviderVisibility}
                 type={DotType.notion}
             />
         </div>
-        <div className={styles.text}>{isLoading ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}</div>
+        <div className={styles.text}>
+            {isLoading && query ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}
+        </div>
         <div className={styles.actionsContainer}>
             <Logo />
             {!isStandalone ? (
