@@ -49,7 +49,7 @@ export const useEventSource = <T>(
 
             eventSource.close();
         };
-    }, [url, options]);
+    }, [url, options, query]);
 
     return { isLoading, events };
 };

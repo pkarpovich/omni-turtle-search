@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type StoreProvider = {
     get<T>(key: string, defaultValue?: T): Promise<T>;
@@ -52,5 +52,16 @@ export const useStorage = <T>(key: string, defaultValue: T) => {
         storeProvider.get<T>(key, defaultValue).then(setValue).catch(console.error);
     }, [defaultValue, key]);
 
-    return [value, setValue] as const;
+    const handleSetValue = useCallback(
+        (newValue: T) => {
+            setValue(() => {
+                storeProvider.set(key, newValue).catch(console.error);
+
+                return newValue;
+            });
+        },
+        [key],
+    );
+
+    return [value, handleSetValue] as const;
 };

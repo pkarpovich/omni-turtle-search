@@ -21,8 +21,8 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
     const [isCollapsed, setIsCollapsed] = useStorage<boolean>(CollapseKey, false);
 
     const handleToggleCollapse = useCallback(() => {
-        setIsCollapsed((prev) => !prev);
-    }, [setIsCollapsed]);
+        setIsCollapsed(!isCollapsed);
+    }, [isCollapsed, setIsCollapsed]);
 
     return (
         <>
