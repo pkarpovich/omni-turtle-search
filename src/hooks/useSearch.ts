@@ -77,11 +77,7 @@ export const useSearch = (query: string, metadata: Metadata): SearchResults => {
         [metadata, query],
     );
 
-    const { isLoading, events } = useEventSource<SearchResponse>(
-        `${metadata.url}/search-stream`,
-        query,
-        eventRequestOptions,
-    );
+    const { isLoading, events } = useEventSource<SearchResponse>(`${metadata.url}/search`, query, eventRequestOptions);
 
     const processedData = useMemo(
         () =>
