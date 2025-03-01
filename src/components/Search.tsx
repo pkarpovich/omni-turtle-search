@@ -17,7 +17,10 @@ type Props = {
 };
 
 export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
-    const { toggleProviderVisibility, providersStatus, hiddenProviders, isLoading, data } = useSearch(query, metadata);
+    const { toggleProviderVisibility, providersStatus, hiddenProviders, isLoading, data } = useSearch(
+        metadata.url,
+        query,
+    );
     const [isCollapsed, setIsCollapsed] = useStorage<boolean>(CollapseKey, false);
 
     const handleToggleCollapse = useCallback(() => {

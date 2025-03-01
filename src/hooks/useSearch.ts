@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { DotType } from "../types/dotType.ts";
-import { type Metadata } from "../types/metadata.ts";
 import { type SearchItem } from "../types/searchItem.ts";
 import { type AppEventSourceOptions, useEventSource } from "./useEventSource.ts";
 
@@ -28,27 +27,13 @@ export type ProviderStatus = {
 };
 
 export type SearchProviderStatus = {
-    todoist: ProviderStatus;
     logseq: ProviderStatus;
-    notion: ProviderStatus;
     cubox: ProviderStatus;
 };
 
 const DefaultSearchProviderStatus: SearchProviderStatus = {
-    todoist: {
-        name: DotType.todoist,
-        isLoading: true,
-        status: false,
-        length: 0,
-    },
     logseq: {
         name: DotType.logseq,
-        isLoading: true,
-        status: false,
-        length: 0,
-    },
-    notion: {
-        name: DotType.notion,
         isLoading: true,
         status: false,
         length: 0,
@@ -61,7 +46,7 @@ const DefaultSearchProviderStatus: SearchProviderStatus = {
     },
 };
 
-export const useSearch = (query: string, metadata: Metadata): SearchResults => {
+export const useSearch = (url: string, query: string): SearchResults => {
     const [hiddenProviders, setHiddenProviders] = useState<DotType[]>([]);
 
     const eventRequestOptions = useMemo<AppEventSourceOptions>(
@@ -69,15 +54,15 @@ export const useSearch = (query: string, metadata: Metadata): SearchResults => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ metadata, query }),
+            body: JSON.stringify({ query }),
             disableLogger: true,
             disableRetry: true,
             method: "POST",
         }),
-        [metadata, query],
+        [query],
     );
 
-    const { isLoading, events } = useEventSource<SearchResponse>(`${metadata.url}/search`, query, eventRequestOptions);
+    const { isLoading, events } = useEventSource<SearchResponse>(`${url}/search`, query, eventRequestOptions);
 
     const processedData = useMemo(
         () =>

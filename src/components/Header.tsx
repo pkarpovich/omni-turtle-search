@@ -45,22 +45,6 @@ export const Header = ({
                 onClick={onToggleProviderVisibility}
                 type={DotType.logseq}
             />
-            <Dot
-                unfilled={hiddenProviders.includes(DotType.todoist)}
-                loading={providersStatus.todoist.isLoading}
-                length={providersStatus.todoist.length}
-                error={providersStatus.todoist.error}
-                onClick={onToggleProviderVisibility}
-                type={DotType.todoist}
-            />
-            <Dot
-                unfilled={hiddenProviders.includes(DotType.notion)}
-                loading={providersStatus.notion.isLoading}
-                length={providersStatus.notion.length}
-                error={providersStatus.notion.error}
-                onClick={onToggleProviderVisibility}
-                type={DotType.notion}
-            />
         </div>
         <div className={styles.text}>
             {isLoading && query ? "Loading..." : itemsLength === 0 ? "No results" : `Omni Search`}
