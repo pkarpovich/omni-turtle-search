@@ -2,8 +2,7 @@ import { useEffect } from "react";
 
 const DEFAULT_OPTIONS = {
     config: {
-        childList: true,
-        subtree: true,
+        attributes: true,
     },
 };
 

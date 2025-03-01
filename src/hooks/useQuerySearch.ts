@@ -20,8 +20,12 @@ export const useQuerySearch = (): [string, (value: string) => void] => {
 
     const handleSearchBarMutation = useCallback((mutations: MutationRecord[]) => {
         for (const mutation of mutations) {
-            if (mutation.type === "childList" && mutation.target instanceof HTMLTextAreaElement) {
-                setQuery(mutation.target.defaultValue);
+            if (
+                mutation.type === "attributes" &&
+                mutation.attributeName === "value" &&
+                mutation.target instanceof HTMLInputElement
+            ) {
+                setQuery(mutation.target.value);
             }
         }
     }, []);
