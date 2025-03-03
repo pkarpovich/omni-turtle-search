@@ -3,8 +3,10 @@ import { useCallback } from "react";
 import { useSearch } from "../hooks/useSearch.ts";
 import { useStorage } from "../hooks/useStorage.ts";
 import { type Metadata } from "../types/metadata.ts";
+import { EmptyState } from "./EmptyState.tsx";
 import { Header } from "./Header.tsx";
 import { Input } from "./Input.tsx";
+import { LoadingState } from "./LoadingState.tsx";
 import { SearchList } from "./SearchList.tsx";
 
 const CollapseKey = "isCollapsed";
@@ -27,6 +29,26 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
         setIsCollapsed(!isCollapsed);
     }, [isCollapsed, setIsCollapsed]);
 
+    const renderContent = () => {
+        if (!query) {
+            return null;
+        }
+
+        if (isLoading) {
+            return <LoadingState />;
+        }
+
+        if (data.length === 0 && !isCollapsed) {
+            return <EmptyState query={query} />;
+        }
+
+        if (!isCollapsed && data.length) {
+            return <SearchList isStandalone={isStandalone} data={data} />;
+        }
+
+        return null;
+    };
+
     return (
         <>
             <Header
@@ -41,7 +63,7 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
                 query={query}
             />
             {isStandalone ? <Input initialQuery={query} onChange={onChange} /> : null}
-            {!isCollapsed && data.length ? <SearchList isStandalone={isStandalone} data={data} /> : null}
+            {renderContent()}
         </>
     );
 };

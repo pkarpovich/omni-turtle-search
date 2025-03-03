@@ -1,0 +1,27 @@
+.emptyStateWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 200px;
+}
+
+.emptyMessageWrapper {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.turtleEmptyMessage {
+    font-size: 1rem;
+    color: var(--primary);
+    font-weight: bold;
+    min-height: 1.5rem;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.turtleTip {
+    font-size: 0.9rem;
+    color: var(--search-result-content-text);
+    font-style: italic;
+}
