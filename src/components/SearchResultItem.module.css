@@ -1,5 +1,10 @@
 .resultItem {
-    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background: var(--primary-50, rgba(255, 255, 255, 0.03));
+    transition:
+        transform 0.15s ease,
+        background 0.2s ease;
 }
 
 .titleContainer {
@@ -35,10 +40,15 @@
 .description {
     font-size: 14px;
     color: var(--search-result-content-text);
-    margin-top: 5px;
+    margin: 0;
 
     flex: 1;
     word-break: break-word;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .date {

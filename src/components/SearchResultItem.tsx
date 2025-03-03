@@ -27,7 +27,7 @@ export const SearchResultItem = ({ providerName, description, title, date, url }
                 {title}
             </a>
         </div>
-        <div className={clsx(styles.url, styles.oneLineText)}>{url}</div>
+        <div className={clsx(styles.url, styles.oneLineText)}>{decodeURI(url)}</div>
         <p className={styles.description}>
             <span className={styles.date}>{formatDate(date)}</span>
             {description}

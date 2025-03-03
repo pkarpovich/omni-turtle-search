@@ -5,8 +5,8 @@ import { SearchItem } from "../types/searchItem.ts";
 import { SearchResultItem } from "./SearchResultItem.tsx";
 
 const MaxHeight = 600;
-const RowHeight = 130;
-const Gap = 20;
+const RowHeight = 100;
+const Gap = 10;
 
 type Props = {
     isStandalone: boolean;
@@ -30,7 +30,6 @@ export const SearchList = ({ isStandalone, data }: Props) => {
             style={{
                 borderBottom: needsBorder ? "1px solid var(--primary-200)" : "none",
                 maxHeight: isStandalone ? "calc(100vh - 160px)" : `${MaxHeight}px`,
-                padding: "0 10px 10px 10px",
                 boxSizing: "content-box",
                 overflowY: "auto",
             }}
@@ -50,7 +49,7 @@ export const SearchList = ({ isStandalone, data }: Props) => {
                             position: "absolute",
                             width: "100%",
                         }}
-                        ref={virtualItem.measureElement}
+                        ref={virtualizer.measureElement}
                         data-index={virtualItem.index}
                         key={virtualItem.key}
                     >

@@ -12,6 +12,7 @@
 
     --primary: #18181a;
     --app-frame-bg: #fff;
+    --primary-50: #f5f5f5;
     --primary-200: #cfcfd1;
     --primary-300: #9f9fa5;
     --search-result-title: #18181a;;
@@ -26,6 +27,7 @@
     @media (prefers-color-scheme: dark) {
         --app-frame-bg: #232325;
         --primary: #e6e6e8;
+        --primary-50: #2f2f31;
         --primary-200: #454549;
         --primary-300: #acacaf;
         --search-result-title: #fff;
