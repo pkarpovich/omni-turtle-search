@@ -6,11 +6,11 @@ on:
       - 'v*.*.*'
 
 jobs:
-  build-chrome-extension:
-    name: Build Chrome Extension Artifact
+  build-and-release:
+    name: Build and Release Chrome Extension
     runs-on: ubuntu-latest
-    outputs:
-      artifact_path: ${{ steps.archive.outputs.artifact_path }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         working-directory: extension
@@ -32,45 +32,15 @@ jobs:
 
       - name: Build
         working-directory: extension
-        run: |-
-          pnpm build:extension
-          zip -r omni-turtle-search-extension-${{ github.sha }}.zip dist-extension
+        run: pnpm build:extension
 
-      - name: Archive chrome-extension artifact
-        id: archive
-        uses: actions/upload-artifact@v4
+      - name: Package Extension
+        working-directory: extension
+        run: zip -r ../omni-turtle-search-extension-${{ github.ref_name }}.zip dist-extension
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v1
         with:
-          name: omni-turtle-search-extension-${{ github.sha }}
-          path: extension/omni-turtle-search-extension-${{ github.sha }}.zip
-
-  release:
-    name: Release Chrome Extension
-    needs: build-chrome-extension
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-
-      - name: download the artifact from the previous job
-        uses: actions/download-artifact@v4
-        with:
-          name: omni-turtle-search-extension-${{ github.sha }}
-
-      - name: create release
-        uses: ncipollo/release-action@v1
-        id: createRelease
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: 'false'
-
-      - name: Upload zip asset to the release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.createRelease.outputs.upload_url }}
-          asset_path: omni-turtle-search-extension-${{ github.sha }}.zip
-          asset_name: omni-turtle-search-extension-${{ github.sha }}.zip
-          asset_content_type: application/zip
+          files: omni-turtle-search-extension-${{ github.ref_name }}.zip
+          draft: false
+          generate_release_notes: true

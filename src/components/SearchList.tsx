@@ -23,12 +23,9 @@ export const SearchList = ({ isStandalone, data }: Props) => {
         gap: Gap,
     });
 
-    const needsBorder = !isStandalone && virtualizer.getTotalSize() > MaxHeight;
-
     return (
         <div
             style={{
-                borderBottom: needsBorder ? "1px solid var(--primary-200)" : "none",
                 maxHeight: isStandalone ? "calc(100vh - 160px)" : `${MaxHeight}px`,
                 boxSizing: "content-box",
                 overflowY: "auto",
