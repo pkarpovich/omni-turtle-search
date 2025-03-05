@@ -36,18 +36,6 @@
     background-color: #85c8c8;
 }
 
-.todoistDot {
-    color: #e54332;
-    border: 2px solid #e54332;
-    background-color: #e54332;
-}
-
-.notionDot {
-    color: #dfdfdf;
-    border: 2px solid #dfdfdf;
-    background-color: #dfdfdf;
-}
-
 .unfilled {
     border-width: 2px;
     background-color: transparent;

@@ -28,9 +28,7 @@ export const Dot = ({ unfilled, loading, onClick, length, error, small, type }: 
                     {
                         [styles.pointer]: Boolean(onClick) && !loading && !error,
                         [styles.unfilled]: Boolean(unfilled) && !loading,
-                        [styles.todoistDot]: type === DotType.todoist,
                         [styles.logseqDot]: type === DotType.logseq,
-                        [styles.notionDot]: type === DotType.notion,
                         [styles.error]: Boolean(error) && !loading,
                         [styles.cuboxDot]: type === DotType.cubox,
                         [styles.loading]: Boolean(loading),
