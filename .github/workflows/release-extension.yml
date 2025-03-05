@@ -33,7 +33,10 @@ jobs:
         run: pnpm build:extension
 
       - name: Package Extension
-        run: zip -r omni-turtle-search-extension-${{ github.ref_name }}.zip dist-extension
+        run: |
+          mkdir -p omni-turtle-search
+          cp -r dist-extension/* omni-turtle-search/
+          zip -r omni-turtle-search-extension-${{ github.ref_name }}.zip omni-turtle-search
 
       - name: Create Release and Upload Asset
         uses: softprops/action-gh-release@v1
