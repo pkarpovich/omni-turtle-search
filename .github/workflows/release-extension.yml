@@ -27,16 +27,13 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        working-directory: extension
         run: pnpm install
 
       - name: Build
-        working-directory: extension
         run: pnpm build:extension
 
       - name: Package Extension
-        working-directory: extension
-        run: zip -r ../omni-turtle-search-extension-${{ github.ref_name }}.zip dist-extension
+        run: zip -r ./omni-turtle-search-extension-${{ github.ref_name }}.zip dist-extension
 
       - name: Create Release and Upload Asset
         uses: softprops/action-gh-release@v1
