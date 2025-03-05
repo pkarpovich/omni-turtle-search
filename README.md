@@ -1,30 +1,37 @@
-# React + TypeScript + Vite
+# 🐢 Omni Turtle Search
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser extension that enhances your search experience by integrating multiple knowledge bases and services into one unified search interface.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Omni Turtle Search is a powerful browser extension that connects to your personal knowledge bases, such as Logseq and Cubox, allowing you to search across all of them simultaneously. It integrates directly with search engines, providing a seamless experience for finding your saved information.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Unified Search Interface**: Search across multiple services in one place
+- **Service Integration**: Currently supports:
+  - 🟦 Logseq - Search your personal knowledge graph
+  - 🟪 Cubox - Search your saved articles and highlights
+- **Real-time Results**: Results appear as they come in from each service
+- **Filter Controls**: Toggle visibility of results from different services
+- **Standalone Mode**: Use as a dedicated web application or embedded in search pages
+- **Easy Configuration**: Simple setup through an options page
 
-- Configure the top-level `parserOptions` property like this:
+## Usage
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+1. **Search Engine Integration**: When browsing on supported search engines, the Omni Search results will appear in the sidebar
+2. **Standalone Application**: Access the full application at your configured URL
+3. **Filtering Results**: Click on the colored dots to toggle visibility of results from specific services
+4. **Collapsing Results**: Use the arrow button to collapse/expand the results panel
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[MIT License](LICENSE)
+
+---
+
+Made with 🐢 power
