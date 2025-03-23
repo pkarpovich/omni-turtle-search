@@ -47,9 +47,11 @@ const storeProvider = isExtension ? chromeStorage : localStorage;
 
 export const useStorage = <T>(key: string, defaultValue: T) => {
     const [value, setValue] = useState<T>(defaultValue);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         storeProvider.get<T>(key, defaultValue).then(setValue).catch(console.error);
+        setIsReady(true);
     }, [defaultValue, key]);
 
     const handleSetValue = useCallback(
@@ -63,5 +65,5 @@ export const useStorage = <T>(key: string, defaultValue: T) => {
         [key],
     );
 
-    return [value, handleSetValue] as const;
+    return [value, handleSetValue, isReady] as const;
 };

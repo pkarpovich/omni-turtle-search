@@ -6,11 +6,11 @@ import styles from "./Dot.module.css";
 
 type Props = {
     onClick?: (provider: DotType) => void;
+    error?: string | null;
     unfilled?: boolean;
     loading?: boolean;
     small?: boolean;
     length?: number;
-    error?: string;
     type: DotType;
 };
 
@@ -37,7 +37,7 @@ export const Dot = ({ unfilled, loading, onClick, length, error, small, type }: 
                     styles.dot,
                 )}
                 onClick={handleClick}
-                title={error}
+                title={error ?? ""}
                 type="button"
             />
             {!small ? <span className={styles.length}>{length}</span> : null}

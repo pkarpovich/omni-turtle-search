@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { DotType } from "../types/dotType.ts";
+import { DotType, isDotType } from "../types/dotType.ts";
 import { type SearchItem } from "../types/searchItem.ts";
 import { type AppEventSourceOptions, useEventSource } from "./useEventSource.ts";
 
@@ -13,35 +13,35 @@ export type SearchResponse = {
 type SearchResults = {
     toggleProviderVisibility: (provider: DotType) => void;
     providersStatus: SearchProviderStatus;
+    connectionError: Error | null;
     hiddenProviders: DotType[];
     isLoading: boolean;
     data: SearchItem[];
 };
 
 export type ProviderStatus = {
+    error: string | null;
     isLoading?: boolean;
     status: boolean;
     length: number;
-    error?: string;
     name: DotType;
 };
 
-export type SearchProviderStatus = {
-    logseq: ProviderStatus;
-    cubox: ProviderStatus;
-};
+export type SearchProviderStatus = Record<DotType, ProviderStatus>;
 
 const DefaultSearchProviderStatus: SearchProviderStatus = {
     logseq: {
         name: DotType.logseq,
         isLoading: true,
         status: false,
+        error: null,
         length: 0,
     },
     cubox: {
         name: DotType.cubox,
         isLoading: true,
         status: false,
+        error: null,
         length: 0,
     },
 };
@@ -62,7 +62,7 @@ export const useSearch = (url: string, query: string): SearchResults => {
         [query],
     );
 
-    const { isLoading, events } = useEventSource<SearchResponse>(`${url}/search`, query, eventRequestOptions);
+    const { isLoading, events, error } = useEventSource<SearchResponse>(`${url}/search`, query, eventRequestOptions);
 
     const processedData = useMemo(
         () =>
@@ -83,23 +83,42 @@ export const useSearch = (url: string, query: string): SearchResults => {
         [events, hiddenProviders],
     );
 
-    const providersStatus = useMemo<SearchProviderStatus>(
-        () =>
-            Array.from(events.values()).reduce<SearchProviderStatus>(
-                (status, { providerName, error }) => ({
-                    ...status,
-                    [providerName]: {
-                        length: events.get(providerName)?.items.length ?? 0,
-                        name: providerName,
+    const providersStatus = useMemo<SearchProviderStatus>(() => {
+        const status = { ...DefaultSearchProviderStatus };
+        const respondedProviders = new Set<DotType>();
+
+        Array.from(events.values()).forEach(({ error: providerError, providerName }) => {
+            respondedProviders.add(providerName);
+
+            status[providerName] = {
+                length: events.get(providerName)?.items.length ?? 0,
+                status: !providerError,
+                error: providerError,
+                name: providerName,
+                isLoading: false,
+            };
+        });
+
+        if (error && !isLoading) {
+            Object.entries(status).forEach(([providerName, providerStatus]) => {
+                if (!isDotType(providerName)) {
+                    return;
+                }
+
+                const providerType = DotType[providerName];
+                if (!respondedProviders.has(providerType)) {
+                    status[providerName] = {
+                        ...providerStatus,
+                        error: "Connection interrupted",
                         isLoading: false,
-                        status: !error,
-                        error,
-                    },
-                }),
-                DefaultSearchProviderStatus,
-            ),
-        [events],
-    );
+                        status: false,
+                    };
+                }
+            });
+        }
+
+        return status;
+    }, [error, events, isLoading]);
 
     const toggleProviderVisibility = useCallback((provider: DotType) => {
         setHiddenProviders((prev) =>
@@ -107,5 +126,12 @@ export const useSearch = (url: string, query: string): SearchResults => {
         );
     }, []);
 
-    return { toggleProviderVisibility, data: processedData, hiddenProviders, providersStatus, isLoading };
+    return {
+        toggleProviderVisibility,
+        connectionError: error,
+        data: processedData,
+        hiddenProviders,
+        providersStatus,
+        isLoading,
+    };
 };

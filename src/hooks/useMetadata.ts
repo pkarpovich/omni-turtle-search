@@ -5,9 +5,13 @@ import { BaseUrlKey } from "../types/storageKeys.ts";
 import { useStorage } from "./useStorage.ts";
 
 export const useMetadata = (): Metadata | null => {
-    const [baseUrl] = useStorage<string>(BaseUrlKey, "");
+    const [baseUrl, , isReady] = useStorage<string>(BaseUrlKey, "");
 
     return useMemo<Metadata | null>(() => {
+        if (!isReady) {
+            return null;
+        }
+
         if (!baseUrl) {
             console.error("Base URL is not set");
             return null;
@@ -16,5 +20,5 @@ export const useMetadata = (): Metadata | null => {
         return {
             url: baseUrl,
         };
-    }, [baseUrl]);
+    }, [baseUrl, isReady]);
 };

@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useSearch } from "../hooks/useSearch.ts";
 import { useStorage } from "../hooks/useStorage.ts";
 import { type Metadata } from "../types/metadata.ts";
+import { ConnectionError } from "./ConnectionError.tsx";
 import { EmptyState } from "./EmptyState.tsx";
 import { Header } from "./Header.tsx";
 import { Input } from "./Input.tsx";
@@ -19,7 +20,7 @@ type Props = {
 };
 
 export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
-    const { toggleProviderVisibility, providersStatus, hiddenProviders, isLoading, data } = useSearch(
+    const { toggleProviderVisibility, providersStatus, hiddenProviders, connectionError, isLoading, data } = useSearch(
         metadata.url,
         query,
     );
@@ -34,7 +35,7 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
             return null;
         }
 
-        if (isLoading) {
+        if (isLoading && data.length === 0) {
             return <LoadingState />;
         }
 
@@ -63,6 +64,7 @@ export const Search = ({ isStandalone, metadata, onChange, query }: Props) => {
                 query={query}
             />
             {isStandalone ? <Input initialQuery={query} onChange={onChange} /> : null}
+            {connectionError ? <ConnectionError error={connectionError} /> : null}
             {renderContent()}
         </>
     );
